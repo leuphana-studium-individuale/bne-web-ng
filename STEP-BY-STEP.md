@@ -31,3 +31,9 @@ ng new amphibian7 --service-worker
 ```
 ng add @angular/pwa
 ```
+
+* Enable Material support
+
+```
+ng add @angular/material
+```
