@@ -37,3 +37,9 @@ ng add @angular/pwa
 ```
 ng add @angular/material
 ```
+
+* Add submodule for Material design icons
+
+```
+git submodule add git@github.com:florianschwanz/material-design-icons.git src/assets/material-design-icons
+```
