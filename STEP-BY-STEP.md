@@ -25,3 +25,9 @@ $ npm install -g @angular/cli
 ```
 ng new amphibian7 --service-worker
 ```
+
+* Enable PWA support
+
+```
+ng add @angular/pwa
+```
