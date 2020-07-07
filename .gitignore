@@ -50,5 +50,6 @@ Thumbs.db
 /cordova/node_modules
 /cordova/platforms
 /coverage
+/release
 /reports
 /out
