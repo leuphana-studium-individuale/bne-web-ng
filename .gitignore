@@ -47,4 +47,6 @@ Thumbs.db
 
 /documentation/
 /jslint-test-results.xml
+/coverage
 /reports
+/out

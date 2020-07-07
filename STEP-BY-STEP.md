@@ -43,3 +43,12 @@ ng add @angular/material
 ```
 git submodule add git@github.com:florianschwanz/material-design-icons.git src/assets/material-design-icons
 ```
+
+* Enable Electron support
+
+```
+npm install --save-dev electron
+npm install --save-dev electron-builder
+npm install --save-dev electron-packager
+npm install --save-dev @types/node
+```
