@@ -47,6 +47,7 @@ Thumbs.db
 
 /documentation/
 /jslint-test-results.xml
+/cordova
 /cordova/node_modules
 /cordova/platforms
 /coverage
