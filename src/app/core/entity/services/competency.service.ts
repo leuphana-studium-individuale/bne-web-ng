@@ -27,13 +27,19 @@ export class CompetencyService {
     private findCompetencies() {
         const competenciesMap = new Map<string, Competency>();
 
-        competenciesMap.set('1', new Competency(
+        competenciesMap.set('0', new Competency(
             'Systemisch',
-            'die Fähigkeit, Beziehungen zu erkennen und zu verstehen; komplexe Systeme zu analysieren; darüber nachzudenken, wie Systeme ' +
-            'in verschiedene Domänen und verschiedene Maßstäbe eingebettet sind; und mit Unsicherheit umzugehen.'
+            'die Fähigkeit, Beziehungen zu erkennen und zu verstehen; komplexe Systeme zu analysieren; darüber nachzudenken, ' +
+            'wie Systeme in verschiedene Domänen und verschiedene Maßstäbe eingebettet sind; und mit Unsicherheit umzugehen.'
+        ));
+        competenciesMap.set('1', new Competency(
+            'Antizipatorisch',
+            'die Fähigkeit, mehrere Zukünfte zu verstehen und zu bewerten - möglich, wahrscheinlich und wünschenswert; ' +
+            'eigene Visionen für die Zukunft zu schaffen; das Vorsorgeprinzip anzuwenden; die Folgen von Handlungen zu bewerten; und mit ' +
+            'Risiken und Veränderungen umzugehen.'
         ));
 
-        this.notifyCompetencies(this.competencies);
+        this.notifyCompetencies(competenciesMap);
     }
 
     /**

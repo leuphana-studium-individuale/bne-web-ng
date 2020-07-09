@@ -33,7 +33,7 @@ export class PartnerService {
             'info@ackerdemia.de'
         ));
 
-        this.notifyPartners(this.partners);
+        this.notifyPartners(partnersMap);
     }
 
     /**
