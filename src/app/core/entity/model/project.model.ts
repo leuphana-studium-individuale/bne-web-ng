@@ -1,4 +1,4 @@
-import {SustainableDevelopmentGoal} from './sustainable-development-goal.model';
+import {Goal} from './goal.model';
 import {Competency} from './competency.model';
 import {Partner} from './partner.model';
 
@@ -12,7 +12,7 @@ export class Project {
     logoName: string;
     url: string;
 
-    sustainableDevelopmentGoals: SustainableDevelopmentGoal[];
+    sustainableDevelopmentGoals: Goal[];
     competencies: Competency[];
     partner: Partner;
 }
