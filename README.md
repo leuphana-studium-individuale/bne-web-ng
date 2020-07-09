@@ -1,6 +1,7 @@
 # BNE Web
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.1.
+A demo is hosted on Github Pages and can be found [here](https://leuphana-studium-individuale.github.io/bne-web-ng/).
 
 ## Development server
 
