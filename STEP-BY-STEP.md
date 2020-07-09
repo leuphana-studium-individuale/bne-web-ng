@@ -23,7 +23,7 @@ $ npm install -g @angular/cli
 * Initialize project
 
 ```
-ng new amphibian7 --service-worker
+ng new bne-web --service-worker
 ```
 
 * Enable PWA support
