@@ -9,6 +9,10 @@ import {Partner} from '../../../../core/entity/model/partner.model';
 import {CompetencyService} from '../../../../core/entity/services/competency.service';
 import {PartnerService} from '../../../../core/entity/services/partner.service';
 import {GoalService} from '../../../../core/entity/services/goal.service';
+import {MaterialColorService} from '../../../../core/ui/services/material-color.service';
+import {MaterialIconService} from '../../../../core/ui/services/material-icon.service';
+import {MatIconRegistry} from '@angular/material/icon';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
     selector: 'app-overview',
@@ -29,7 +33,11 @@ export class OverviewComponent implements OnInit, OnDestroy {
     /** Helper subject used to finish other subscriptions */
     public unsubscribeSubject = new Subject();
 
-    constructor(private projectService: ProjectService,
+    constructor(private iconRegistry: MatIconRegistry,
+                private sanitizer: DomSanitizer,
+                private materialColorService: MaterialColorService,
+                private materialIconService: MaterialIconService,
+                private projectService: ProjectService,
                 private goalService: GoalService,
                 private competencyService: CompetencyService,
                 private partnerService: PartnerService) {
@@ -37,6 +45,8 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.initializeSubscriptions();
+
+        this.initializeMaterial();
 
         this.findEntities();
     }
@@ -141,6 +151,14 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
         this.projectsMapFiltered = new Map(projectsMapFiltered);
     }
+
+    protected initializeMaterial() {
+        this.materialIconService.initializeIcons(this.iconRegistry, this.sanitizer);
+    }
+
+    //
+    //
+    //
 
     private filterProject(project: Project): boolean {
         // TODO Implement
