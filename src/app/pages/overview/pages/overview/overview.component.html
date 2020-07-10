@@ -1,8 +1,8 @@
-<app-overview-toolbar (menuItemEventEmitter)="onMenuItemClicked($event)"></app-overview-toolbar>
+<app-overview-toolbar [searchPanelState]="searchPanelState" (menuItemEventEmitter)="onMenuItemClicked($event)"></app-overview-toolbar>
 <div [@searchPanelAnimation]="searchPanelState">
-    <app-search-panel [goalsMap]="goalsMap"
+    <app-search-panel [goalsValuesMap]="goalsValuesMap"
                       [goalsBackgroundColor]="goalsBackgroundColor"
-                      [competenciesMap]="competenciesMap"
+                      [competenciesValuesMap]="competenciesValuesMap"
                       [competenciesBackgroundColor]="competenciesBackgroundColor"
                       [partnersMap]="partnersMap"
                       (goalsSelectedEmitter)="onGoalsSelected($event)"
@@ -11,9 +11,9 @@
 
 <div class="content">
     <app-project-list [projectsMap]="projectsMapFiltered"
-                      [goalsMap]="goalsMap"
+                      [goalsMap]="selectableGoalsMap"
                       [goalsBackground]="goalsBackgroundColor"
-                      [competenciesMap]="competenciesMap"
+                      [competenciesMap]="selectableCompetenciesMap"
                       [competenciesBackground]="competenciesBackgroundColor"
                       [partnersMap]="partnersMap">
     </app-project-list>

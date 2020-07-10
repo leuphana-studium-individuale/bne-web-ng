@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 
 export class SelectableTag {
     name: string;
@@ -19,7 +19,7 @@ export class SelectableTag {
     styleUrls: ['./selectable-tag-chips.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectableTagChipsComponent implements OnInit {
+export class SelectableTagChipsComponent implements OnChanges {
 
     /** Tags to be displayed */
     @Input() selectableTagsMap: Map<string, boolean> = new Map<string, boolean>();
@@ -43,7 +43,7 @@ export class SelectableTagChipsComponent implements OnInit {
     // Lifecycle hooks
     //
 
-    ngOnInit() {
+    ngOnChanges(changes: SimpleChanges) {
         this.initializeSelectableTags();
     }
 

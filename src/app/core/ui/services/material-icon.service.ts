@@ -59,6 +59,7 @@ export class MaterialIconService {
     private VARIANT = 'production';
     /** List of icons */
     private icons: Icon[] = [
+        {topic: IconTopic.ACTION, name: 'search', file: 'ic_search_24px.svg'},
         {topic: IconTopic.CONTENT, name: 'filter_list', file: 'ic_filter_list_24px.svg'}
     ];
 

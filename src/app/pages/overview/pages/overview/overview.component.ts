@@ -1,6 +1,6 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {ProjectService} from '../../../../core/entity/services/project.service';
-import {Observable, Subject} from 'rxjs';
+import {Subject} from 'rxjs';
 import {Project} from '../../../../core/entity/model/project.model';
 import {filter, takeUntil} from 'rxjs/operators';
 import {Goal} from '../../../../core/entity/model/goal.model';
@@ -14,6 +14,22 @@ import {MaterialIconService} from '../../../../core/ui/services/material-icon.se
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+
+export class SelectableGoal extends Goal {
+    selected = false;
+
+    constructor(goal: Goal) {
+        super(goal.index, goal.title, goal.shortDescription);
+    }
+}
+
+export class SelectableCompetency extends Competency {
+    selected = false;
+
+    constructor(competency: Competency) {
+        super(competency.title, competency.shortDescription);
+    }
+}
 
 @Component({
     selector: 'app-overview',
@@ -35,22 +51,22 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
         ])
     ]
 })
-export class OverviewComponent implements OnInit, OnDestroy {
+export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
 
     /** Map of projects */
     public projectsMap = new Map<string, Project>();
     /** Array of filtered projects */
     public projectsMapFiltered = new Map<string, Project>();
 
-    public goalsMap = new Map<string, Goal>();
-    public competenciesMap = new Map<string, Competency>();
+    public selectableGoalsMap = new Map<string, SelectableGoal>();
+    public selectableCompetenciesMap = new Map<string, SelectableCompetency>();
     public partnersMap = new Map<string, Partner>();
-
-    public goalsSelected = new Map<string, boolean>();
-    public competenciesSelected = new Map<string, boolean>();
 
     public goalsBackgroundColor = 'transparent';
     public competenciesBackgroundColor = 'transparent';
+
+    goalsValuesMap: Map<string, boolean> = new Map<string, boolean>();
+    competenciesValuesMap: Map<string, boolean> = new Map<string, boolean>();
 
     searchPanelState = 'closed';
 
@@ -78,6 +94,14 @@ export class OverviewComponent implements OnInit, OnDestroy {
         this.findEntities();
     }
 
+    ngOnChanges(changes: SimpleChanges) {
+
+        this.competenciesValuesMap = new Map<string, boolean>();
+        this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: string) => {
+            this.competenciesValuesMap.set(value.title, value.selected);
+        });
+    }
+
     ngOnDestroy() {
         this.unsubscribeSubject.next();
         this.unsubscribeSubject.complete();
@@ -94,14 +118,17 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
     onGoalsUpdated(goals: Map<string, Goal>) {
         this.initializeGoals(goals);
+        this.initializeValueMaps();
     }
 
     onCompetenciesUpdated(competencies: Map<string, Competency>) {
         this.initializeCompetencies(competencies);
+        this.initializeValueMaps();
     }
 
     onPartnersUpdated(partners: Map<string, Partner>) {
         this.initializePartners(partners);
+        this.initializeValueMaps();
     }
 
     //
@@ -109,46 +136,30 @@ export class OverviewComponent implements OnInit, OnDestroy {
     //
 
     private initializeSubscriptions() {
-        this.initializeProjectsSubscription().subscribe(value => {
+        this.projectService.projectsSubject.pipe(
+            takeUntil(this.unsubscribeSubject),
+            filter(value => value != null)
+        ).subscribe(value => {
             this.onProjectsUpdated(value as Map<string, Project>);
         });
-        this.initializeGoalsSubscription().subscribe(value => {
+        this.goalService.goalsSubject.pipe(
+            takeUntil(this.unsubscribeSubject),
+            filter(value => value != null)
+        ).subscribe(value => {
             this.onGoalsUpdated(value as Map<string, Goal>);
         });
-        this.initializeCompetenciesSubscription().subscribe(value => {
+        this.competencyService.competenciesSubject.pipe(
+            takeUntil(this.unsubscribeSubject),
+            filter(value => value != null)
+        ).subscribe(value => {
             this.onCompetenciesUpdated(value as Map<string, Competency>);
         });
-        this.initializePartnersSubscription().subscribe(value => {
+        this.partnerService.partnersSubject.pipe(
+            takeUntil(this.unsubscribeSubject),
+            filter(value => value != null)
+        ).subscribe(value => {
             this.onPartnersUpdated(value as Map<string, Partner>);
         });
-    }
-
-    private initializeProjectsSubscription(): Observable<Map<string, Project>> {
-        return this.projectService.projectsSubject.pipe(
-            takeUntil(this.unsubscribeSubject),
-            filter(value => value != null)
-        );
-    }
-
-    private initializeGoalsSubscription(): Observable<Map<string, Goal>> {
-        return this.goalService.goalsSubject.pipe(
-            takeUntil(this.unsubscribeSubject),
-            filter(value => value != null)
-        );
-    }
-
-    private initializeCompetenciesSubscription(): Observable<Map<string, Competency>> {
-        return this.competencyService.competenciesSubject.pipe(
-            takeUntil(this.unsubscribeSubject),
-            filter(value => value != null)
-        );
-    }
-
-    private initializePartnersSubscription(): Observable<Map<string, Partner>> {
-        return this.partnerService.partnersSubject.pipe(
-            takeUntil(this.unsubscribeSubject),
-            filter(value => value != null)
-        );
     }
 
     private initializeProjects(projectsMap: Map<string, Project>) {
@@ -156,11 +167,19 @@ export class OverviewComponent implements OnInit, OnDestroy {
     }
 
     private initializeGoals(goalsMap: Map<string, Goal>) {
-        this.goalsMap = new Map(goalsMap);
+        this.selectableGoalsMap = new Map<string, SelectableGoal>();
+        goalsMap.forEach((value: Goal, key: string) => {
+            this.selectableGoalsMap.set(key, new SelectableGoal(value));
+            this.goalsValuesMap.set(value.title, false);
+        });
     }
 
     private initializeCompetencies(competenciesMap: Map<string, Competency>) {
-        this.competenciesMap = new Map(competenciesMap);
+        this.selectableCompetenciesMap = new Map<string, SelectableCompetency>();
+        competenciesMap.forEach((value: Competency, key: string) => {
+            this.selectableCompetenciesMap.set(key, new SelectableCompetency(value));
+            this.competenciesValuesMap.set(value.title, false);
+        });
     }
 
     private initializePartners(partnersMap: Map<string, Partner>) {
@@ -176,7 +195,21 @@ export class OverviewComponent implements OnInit, OnDestroy {
             projectsMapFiltered.set(project.id, project);
         });
 
+        // Re-instantiate to trigger change detection
         this.projectsMapFiltered = new Map(projectsMapFiltered);
+    }
+
+    private initializeValueMaps() {
+        this.selectableGoalsMap.forEach((value: SelectableGoal, key: string) => {
+            this.goalsValuesMap.set(value.title, value.selected);
+        });
+        this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: string) => {
+            this.competenciesValuesMap.set(value.title, value.selected);
+        });
+
+        // Re-instantiate to trigger change detection
+        this.goalsValuesMap = new Map(this.goalsValuesMap);
+        this.competenciesValuesMap = new Map(this.competenciesValuesMap);
     }
 
     protected initializeMaterial() {
@@ -193,6 +226,19 @@ export class OverviewComponent implements OnInit, OnDestroy {
                 this.searchPanelState = this.searchPanelState === 'opened' ? 'closed' : 'opened';
                 break;
             }
+            case 'filter-reset': {
+                this.selectableGoalsMap.forEach((value: SelectableGoal, key: string) => {
+                    value.selected = false;
+                });
+                this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: string) => {
+                    value.selected = false;
+                });
+
+                // Initialize values for filter panel and refilter
+                this.initializeValueMaps();
+                this.initializeProjectsFiltered(this.projectsMap);
+                break;
+            }
             default: {
                 break;
             }
@@ -200,12 +246,17 @@ export class OverviewComponent implements OnInit, OnDestroy {
     }
 
     onGoalsSelected(event: Map<string, boolean>) {
-        this.goalsSelected = event;
+        this.selectableGoalsMap.forEach((value: SelectableGoal, key: string) => {
+            value.selected = event.has(value.title) && event.get(value.title);
+        });
+
         this.initializeProjectsFiltered(this.projectsMap);
     }
 
     onCompetenciesSelected(event: any) {
-        this.competenciesSelected = event;
+        this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: string) => {
+            value.selected = event.has(value.title) && event.get(value.title);
+        });
         this.initializeProjectsFiltered(this.projectsMap);
     }
 
@@ -216,31 +267,35 @@ export class OverviewComponent implements OnInit, OnDestroy {
     private filterProject(project: Project): boolean {
         const projectGoals = [];
         project.sustainableDevelopmentGoalIds.forEach(id => {
-            const goal = this.goalsMap.get(id);
+            const goal = this.selectableGoalsMap.get(id);
             if (goal != null) {
                 projectGoals.push(goal.title);
             }
         });
         const projectCompetencies = [];
         project.competencyIds.forEach(id => {
-            const competency = this.competenciesMap.get(id);
+            const competency = this.selectableCompetenciesMap.get(id);
             if (competency != null) {
                 projectCompetencies.push(competency.title);
             }
         });
 
-        const noGoalSelected = !Array.from(this.goalsSelected.values()).some(selected => {
-            return selected;
+        const noGoalSelected = !Array.from(this.selectableGoalsMap.values()).some(selectableGoal => {
+            return selectableGoal.selected;
         });
-        const matchesGoal = noGoalSelected || projectGoals.some(p => {
-            return this.goalsSelected.has(p) && this.goalsSelected.get(p);
+        const matchesGoal = noGoalSelected || projectGoals.some(projectGoal => {
+            return Array.from(this.selectableGoalsMap.values()).some(selectableGoal => {
+                return selectableGoal.selected && selectableGoal.title === projectGoal;
+            });
         });
 
-        const noCompetencySelected = !Array.from(this.competenciesSelected.values()).some(selected => {
-            return selected;
+        const noCompetencySelected = !Array.from(this.selectableCompetenciesMap.values()).some(selectableCompetency => {
+            return selectableCompetency.selected;
         });
-        const matchesCompetency = noCompetencySelected || projectCompetencies.some(p => {
-            return this.competenciesSelected.has(p) && this.competenciesSelected.get(p);
+        const matchesCompetency = noCompetencySelected || projectCompetencies.some(projectCompetency => {
+            return Array.from(this.selectableCompetenciesMap.values()).some(selectableCompetency => {
+                return selectableCompetency.selected && selectableCompetency.title === projectCompetency;
+            });
         });
 
         return matchesGoal && matchesCompetency;

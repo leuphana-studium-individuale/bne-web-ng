@@ -5,6 +5,9 @@
             [matTooltip]="'Filtern'"
             [matTooltipPosition]="'left'"
             (click)="onFilterClicked()">
-        <mat-icon svgIcon="filter_list"></mat-icon>
+        <mat-icon svgIcon="search"></mat-icon>
+    </button>
+    <button mat-button [@searchResetButtonAnimation]="searchPanelState" (click)="onResetFilterClicked()">
+        FILTER ZURÜCKSETZEN
     </button>
 </mat-toolbar>
