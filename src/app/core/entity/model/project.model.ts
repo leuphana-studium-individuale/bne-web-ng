@@ -1,5 +1,5 @@
 export class Project {
-    id: string;
+    id: number;
     title: string;
     description: string;
     costPerChild: number;
@@ -9,13 +9,13 @@ export class Project {
     logoName: string;
     url: string;
 
-    sustainableDevelopmentGoalIds: string[];
-    competencyIds: string[];
-    partnerId: string;
+    sustainableDevelopmentGoalIds: number[];
+    competencyIds: number[];
+    partnerId: number;
 
-    constructor(id: string, title: string, description: string, costPerChild: number, costTotal: number, effortInHours: number,
-                durationInDays: number, logoName: string, url: string, sustainableDevelopmentGoalIds: string[], competencyIds: string[],
-                partnerId: string) {
+    constructor(id: number, title: string, description: string, costPerChild: number, costTotal: number, effortInHours: number,
+                durationInDays: number, logoName: string, url: string, sustainableDevelopmentGoalIds: number[], competencyIds: number[],
+                partnerId: number) {
         this.id = id;
         this.title = title;
         this.description = description;

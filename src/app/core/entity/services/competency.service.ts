@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs';
 import {Competency} from '../model/competency.model';
+import {COMPETENCY_DATA} from '../model/competency.mock';
 
 @Injectable({
     providedIn: 'root'
@@ -11,10 +12,10 @@ export class CompetencyService {
     }
 
     /** Subject that publishes competencies */
-    competenciesSubject = new Subject<Map<string, Competency>>();
+    competenciesSubject = new Subject<Map<number, Competency>>();
 
     /** Map of competencies */
-    private competencies: Map<string, Competency>;
+    private competencies: Map<number, Competency>;
 
     public fetchCompetencies(forceReload = false) {
         if (this.competencies != null && !forceReload) {
@@ -25,19 +26,11 @@ export class CompetencyService {
     }
 
     private findCompetencies() {
-        const competenciesMap = new Map<string, Competency>();
+        const competenciesMap = new Map<number, Competency>();
 
-        competenciesMap.set('0', new Competency(
-            'Systemisch',
-            'die Fähigkeit, Beziehungen zu erkennen und zu verstehen; komplexe Systeme zu analysieren; darüber nachzudenken, ' +
-            'wie Systeme in verschiedene Domänen und verschiedene Maßstäbe eingebettet sind; und mit Unsicherheit umzugehen.'
-        ));
-        competenciesMap.set('1', new Competency(
-            'Antizipatorisch',
-            'die Fähigkeit, mehrere Zukünfte zu verstehen und zu bewerten - möglich, wahrscheinlich und wünschenswert; ' +
-            'eigene Visionen für die Zukunft zu schaffen; das Vorsorgeprinzip anzuwenden; die Folgen von Handlungen zu bewerten; und mit ' +
-            'Risiken und Veränderungen umzugehen.'
-        ));
+        COMPETENCY_DATA.forEach(c => {
+            competenciesMap.set(c.id, c);
+        });
 
         this.notifyCompetencies(competenciesMap);
     }
@@ -46,7 +39,7 @@ export class CompetencyService {
      * Notifies subscribers that something has changed
      * @param competenciesMap competencies map
      */
-    public notifyCompetencies(competenciesMap: Map<string, Competency>) {
+    public notifyCompetencies(competenciesMap: Map<number, Competency>) {
         this.competenciesSubject.next(competenciesMap);
     }
 }

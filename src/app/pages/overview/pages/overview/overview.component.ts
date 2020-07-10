@@ -19,7 +19,7 @@ export class SelectableGoal extends Goal {
     selected = false;
 
     constructor(goal: Goal) {
-        super(goal.index, goal.title, goal.shortDescription);
+        super(goal.id, goal.title, goal.shortDescription);
     }
 }
 
@@ -27,7 +27,7 @@ export class SelectableCompetency extends Competency {
     selected = false;
 
     constructor(competency: Competency) {
-        super(competency.title, competency.shortDescription);
+        super(competency.id, competency.title, competency.shortDescription);
     }
 }
 
@@ -54,13 +54,13 @@ export class SelectableCompetency extends Competency {
 export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
 
     /** Map of projects */
-    public projectsMap = new Map<string, Project>();
+    public projectsMap = new Map<number, Project>();
     /** Array of filtered projects */
-    public projectsMapFiltered = new Map<string, Project>();
+    public projectsMapFiltered = new Map<number, Project>();
 
-    public selectableGoalsMap = new Map<string, SelectableGoal>();
-    public selectableCompetenciesMap = new Map<string, SelectableCompetency>();
-    public partnersMap = new Map<string, Partner>();
+    public selectableGoalsMap = new Map<number, SelectableGoal>();
+    public selectableCompetenciesMap = new Map<number, SelectableCompetency>();
+    public partnersMap = new Map<number, Partner>();
 
     public goalsBackgroundColor = 'transparent';
     public competenciesBackgroundColor = 'transparent';
@@ -97,7 +97,7 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
     ngOnChanges(changes: SimpleChanges) {
 
         this.competenciesValuesMap = new Map<string, boolean>();
-        this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: string) => {
+        this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: number) => {
             this.competenciesValuesMap.set(value.title, value.selected);
         });
     }
@@ -111,22 +111,22 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
     // Events
     //
 
-    onProjectsUpdated(projects: Map<string, Project>) {
+    onProjectsUpdated(projects: Map<number, Project>) {
         this.initializeProjects(projects);
         this.initializeProjectsFiltered(projects);
     }
 
-    onGoalsUpdated(goals: Map<string, Goal>) {
+    onGoalsUpdated(goals: Map<number, Goal>) {
         this.initializeGoals(goals);
         this.initializeValueMaps();
     }
 
-    onCompetenciesUpdated(competencies: Map<string, Competency>) {
+    onCompetenciesUpdated(competencies: Map<number, Competency>) {
         this.initializeCompetencies(competencies);
         this.initializeValueMaps();
     }
 
-    onPartnersUpdated(partners: Map<string, Partner>) {
+    onPartnersUpdated(partners: Map<number, Partner>) {
         this.initializePartners(partners);
         this.initializeValueMaps();
     }
@@ -140,54 +140,54 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
             takeUntil(this.unsubscribeSubject),
             filter(value => value != null)
         ).subscribe(value => {
-            this.onProjectsUpdated(value as Map<string, Project>);
+            this.onProjectsUpdated(value as Map<number, Project>);
         });
         this.goalService.goalsSubject.pipe(
             takeUntil(this.unsubscribeSubject),
             filter(value => value != null)
         ).subscribe(value => {
-            this.onGoalsUpdated(value as Map<string, Goal>);
+            this.onGoalsUpdated(value as Map<number, Goal>);
         });
         this.competencyService.competenciesSubject.pipe(
             takeUntil(this.unsubscribeSubject),
             filter(value => value != null)
         ).subscribe(value => {
-            this.onCompetenciesUpdated(value as Map<string, Competency>);
+            this.onCompetenciesUpdated(value as Map<number, Competency>);
         });
         this.partnerService.partnersSubject.pipe(
             takeUntil(this.unsubscribeSubject),
             filter(value => value != null)
         ).subscribe(value => {
-            this.onPartnersUpdated(value as Map<string, Partner>);
+            this.onPartnersUpdated(value as Map<number, Partner>);
         });
     }
 
-    private initializeProjects(projectsMap: Map<string, Project>) {
+    private initializeProjects(projectsMap: Map<number, Project>) {
         this.projectsMap = new Map(projectsMap);
     }
 
-    private initializeGoals(goalsMap: Map<string, Goal>) {
-        this.selectableGoalsMap = new Map<string, SelectableGoal>();
-        goalsMap.forEach((value: Goal, key: string) => {
+    private initializeGoals(goalsMap: Map<number, Goal>) {
+        this.selectableGoalsMap = new Map<number, SelectableGoal>();
+        goalsMap.forEach((value: Goal, key: number) => {
             this.selectableGoalsMap.set(key, new SelectableGoal(value));
             this.goalsValuesMap.set(value.title, false);
         });
     }
 
-    private initializeCompetencies(competenciesMap: Map<string, Competency>) {
-        this.selectableCompetenciesMap = new Map<string, SelectableCompetency>();
-        competenciesMap.forEach((value: Competency, key: string) => {
+    private initializeCompetencies(competenciesMap: Map<number, Competency>) {
+        this.selectableCompetenciesMap = new Map<number, SelectableCompetency>();
+        competenciesMap.forEach((value: Competency, key: number) => {
             this.selectableCompetenciesMap.set(key, new SelectableCompetency(value));
             this.competenciesValuesMap.set(value.title, false);
         });
     }
 
-    private initializePartners(partnersMap: Map<string, Partner>) {
+    private initializePartners(partnersMap: Map<number, Partner>) {
         this.partnersMap = new Map(partnersMap);
     }
 
-    private initializeProjectsFiltered(projectsMap: Map<string, Project>) {
-        const projectsMapFiltered = new Map<string, Project>();
+    private initializeProjectsFiltered(projectsMap: Map<number, Project>) {
+        const projectsMapFiltered = new Map<number, Project>();
 
         Array.from(projectsMap.values()).filter(project => {
             return this.filterProject(project);
@@ -200,10 +200,10 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private initializeValueMaps() {
-        this.selectableGoalsMap.forEach((value: SelectableGoal, key: string) => {
+        this.selectableGoalsMap.forEach((value: SelectableGoal, key: number) => {
             this.goalsValuesMap.set(value.title, value.selected);
         });
-        this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: string) => {
+        this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: number) => {
             this.competenciesValuesMap.set(value.title, value.selected);
         });
 
@@ -227,10 +227,10 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
                 break;
             }
             case 'filter-reset': {
-                this.selectableGoalsMap.forEach((value: SelectableGoal, key: string) => {
+                this.selectableGoalsMap.forEach((value: SelectableGoal, key: number) => {
                     value.selected = false;
                 });
-                this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: string) => {
+                this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: number) => {
                     value.selected = false;
                 });
 
@@ -246,7 +246,7 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     onGoalsSelected(event: Map<string, boolean>) {
-        this.selectableGoalsMap.forEach((value: SelectableGoal, key: string) => {
+        this.selectableGoalsMap.forEach((value: SelectableGoal, key: number) => {
             value.selected = event.has(value.title) && event.get(value.title);
         });
 
@@ -254,7 +254,7 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     onCompetenciesSelected(event: any) {
-        this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: string) => {
+        this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: number) => {
             value.selected = event.has(value.title) && event.get(value.title);
         });
         this.initializeProjectsFiltered(this.projectsMap);
