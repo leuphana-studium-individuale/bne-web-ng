@@ -1,20 +1,20 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {OverviewComponent} from './overview.component';
+import {SearchPanelChipsComponent} from './search-panel-chips.component';
 
-describe('OverviewComponent', () => {
-    let component: OverviewComponent;
-    let fixture: ComponentFixture<OverviewComponent>;
+describe('SearchPanelChipsComponent', () => {
+    let component: SearchPanelChipsComponent;
+    let fixture: ComponentFixture<SearchPanelChipsComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [OverviewComponent]
+            declarations: [SearchPanelChipsComponent]
         })
             .compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(OverviewComponent);
+        fixture = TestBed.createComponent(SearchPanelChipsComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

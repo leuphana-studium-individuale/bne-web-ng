@@ -11,6 +11,8 @@ import {OverviewToolbarComponent} from './components/overview-toolbar/overview-t
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatIconModule} from '@angular/material/icon';
+import { SearchPanelComponent } from './components/search-panel/search-panel.component';
+import { SearchPanelChipsComponent } from './components/search-panel-chips/search-panel-chips.component';
 
 
 @NgModule({
@@ -18,7 +20,9 @@ import {MatIconModule} from '@angular/material/icon';
         OverviewComponent,
         OverviewToolbarComponent,
         ProjectListComponent,
-        ProjectListItemComponent
+        ProjectListItemComponent,
+        SearchPanelComponent,
+        SearchPanelChipsComponent
     ],
     exports: [
         OverviewComponent

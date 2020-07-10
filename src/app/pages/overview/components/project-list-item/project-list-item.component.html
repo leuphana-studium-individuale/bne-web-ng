@@ -1,18 +1,17 @@
-<mat-card>
+<mat-card class="project">
     <mat-card-title>{{ project.title}}</mat-card-title>
     <mat-card-subtitle>{{ project.description }}</mat-card-subtitle>
     <mat-card-content>
     </mat-card-content>
-    <mat-card-footer>
-        <mat-card-actions>
-            <div class="flexcontainer">
-                <app-tag-chips [tags]="projectGoals" [readonly]="true"></app-tag-chips>
-                <app-tag-chips [tags]="projectCompetencies" [readonly]="true"></app-tag-chips>
-                <app-tag-chips  [readonly]="true"></app-tag-chips>
-                <button mat-button (click)="onDetailsButtonClicked()">
-                    Detailansicht
-                </button>
-            </div>
-        </mat-card-actions>
-    </mat-card-footer>
+    <mat-card-actions>
+        <div class="flexcontainer">
+            <app-tag-chips [tags]="projectGoals" [readonly]="true" [background]="goalsBackground"></app-tag-chips>
+            <app-tag-chips [tags]="projectCompetencies" [readonly]="true" [background]="competenciesBackground"></app-tag-chips>
+            <app-tag-chips [readonly]="true"></app-tag-chips>
+            <div class="flexbox"></div>
+            <button mat-button (click)="onDetailsButtonClicked()">
+                Detailansicht
+            </button>
+        </div>
+    </mat-card-actions>
 </mat-card>

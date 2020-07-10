@@ -1,1 +1,19 @@
+@import '../../../../../styles';
 @import '../../../../../flex';
+
+.project {
+  margin: 10px auto;
+
+  @media #{$breakpoint-small} {
+    width: 100%;
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+    box-sizing: border-box; /* Opera/IE 8+ */
+  }
+  @media #{$breakpoint-medium} {
+    width: 450px;
+  }
+  @media #{$breakpoint-large} {
+    width: 450px;
+  }
+}

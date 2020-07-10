@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Output, EventEmitter} from '@angular/core';
 
 @Component({
     selector: 'app-overview-toolbar',
@@ -7,6 +7,8 @@ import {Component, OnInit} from '@angular/core';
 })
 export class OverviewToolbarComponent implements OnInit {
 
+    @Output() menuItemEventEmitter = new EventEmitter<string>();
+
     constructor() {
     }
 
@@ -14,6 +16,6 @@ export class OverviewToolbarComponent implements OnInit {
     }
 
     onFilterClicked() {
-        console.log('BOING');
+        this.menuItemEventEmitter.emit('filter');
     }
 }

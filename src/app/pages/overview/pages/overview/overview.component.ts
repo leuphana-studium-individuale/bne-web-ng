@@ -13,11 +13,27 @@ import {MaterialColorService} from '../../../../core/ui/services/material-color.
 import {MaterialIconService} from '../../../../core/ui/services/material-icon.service';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
     selector: 'app-overview',
     templateUrl: './overview.component.html',
-    styleUrls: ['./overview.component.scss']
+    styleUrls: ['./overview.component.scss'],
+    animations: [
+        trigger('searchPanelAnimation', [
+            state('open', style({
+                opacity: '1',
+                overflow: 'hidden',
+                height: '*',
+            })),
+            state('closed', style({
+                opacity: '0',
+                overflow: 'hidden',
+                height: '0px',
+            })),
+            transition('* => *', animate('400ms ease-in-out'))
+        ])
+    ]
 })
 export class OverviewComponent implements OnInit, OnDestroy {
 
@@ -29,6 +45,13 @@ export class OverviewComponent implements OnInit, OnDestroy {
     public goalsMap = new Map<string, Goal>();
     public competenciesMap = new Map<string, Competency>();
     public partnersMap = new Map<string, Partner>();
+
+    public goalsSelected = new Map<string, boolean>();
+
+    public goalsBackgroundColor = 'transparent';
+    public competenciesBackgroundColor = 'transparent';
+
+    searchPanelState = 'closed';
 
     /** Helper subject used to finish other subscriptions */
     public unsubscribeSubject = new Subject();
@@ -47,6 +70,9 @@ export class OverviewComponent implements OnInit, OnDestroy {
         this.initializeSubscriptions();
 
         this.initializeMaterial();
+
+        this.goalsBackgroundColor = this.materialColorService.primary;
+        this.competenciesBackgroundColor = this.materialColorService.accent;
 
         this.findEntities();
     }
@@ -141,6 +167,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     }
 
     private initializeProjectsFiltered(projectsMap: Map<string, Project>) {
+        console.log(`initializeProjectsFiltered`);
         const projectsMapFiltered = new Map<string, Project>();
 
         Array.from(projectsMap.values()).filter(project => {
@@ -149,6 +176,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
             projectsMapFiltered.set(project.id, project);
         });
 
+        console.log(`projectsMapFiltered ${Array.from(projectsMapFiltered.values()).length}`)
         this.projectsMapFiltered = new Map(projectsMapFiltered);
     }
 
@@ -157,12 +185,53 @@ export class OverviewComponent implements OnInit, OnDestroy {
     }
 
     //
+    // Actions
+    //
+
+    onMenuItemClicked(menuItem: string) {
+        switch (menuItem) {
+            case 'filter': {
+                this.searchPanelState = this.searchPanelState === 'opened' ? 'closed' : 'opened';
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    }
+
+    onGoalsSelected(event: Map<string, boolean>) {
+        this.goalsSelected = event;
+        this.initializeProjectsFiltered(this.projectsMap);
+    }
+
+    //
     //
     //
 
     private filterProject(project: Project): boolean {
-        // TODO Implement
-        return true;
+        const projectGoals = [];
+        project.sustainableDevelopmentGoalIds.forEach(id => {
+            const goal = this.goalsMap.get(id);
+            if (goal != null) {
+                projectGoals.push(goal.title);
+            }
+        });
+
+        const noGoalSelected = !Array.from(this.goalsSelected.values()).some(selected => {
+            return selected;
+        });
+        const matchesGoal = noGoalSelected || projectGoals.some(p => {
+            console.log(`projectGoal ${p}`);
+            // console.log(`goalsSelected ${Array.from(this.goalsSelected.values())}`);
+            // console.log(`goalsSelected ${Array.from(this.goalsSelected.keys())}`);
+            console.log(`goalsSelected.has(p) ${this.goalsSelected.has(p)}`);
+            console.log(`goalsSelected.get(p) ${this.goalsSelected.get(p)}`);
+
+            return this.goalsSelected.has(p) && this.goalsSelected.get(p);
+        });
+
+        return matchesGoal;
     }
 
     protected findEntities(forceReload = false) {

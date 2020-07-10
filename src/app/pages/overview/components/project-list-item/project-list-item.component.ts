@@ -15,7 +15,9 @@ export class ProjectListItemComponent implements OnInit {
     @Input() project: Project;
 
     @Input() goalsMap: Map<string, Goal>;
+    @Input() goalsBackground: 'transparent';
     @Input() competenciesMap: Map<string, Competency>;
+    @Input() competenciesBackground: 'transparent';
     @Input() partnersMap: Map<string, Partner>;
 
     projectGoals = [];

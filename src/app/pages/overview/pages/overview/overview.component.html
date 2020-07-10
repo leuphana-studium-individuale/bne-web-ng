@@ -1,6 +1,18 @@
-<app-overview-toolbar></app-overview-toolbar>
-<app-project-list [projectsMap]="projectsMapFiltered"
-                  [goalsMap]="goalsMap"
-                  [competenciesMap]="competenciesMap"
-                  [partnersMap]="partnersMap">
-</app-project-list>
+<app-overview-toolbar (menuItemEventEmitter)="onMenuItemClicked($event)"></app-overview-toolbar>
+<div [@searchPanelAnimation]="searchPanelState">
+    <app-search-panel [goalsMap]="goalsMap"
+                      [goalsBackgroundColor]="goalsBackgroundColor"
+                      [competenciesMap]="competenciesMap"
+                      [partnersMap]="partnersMap"
+                      (goalsSelectedEmitter)="onGoalsSelected($event)"></app-search-panel>
+</div>
+
+<div class="content">
+    <app-project-list [projectsMap]="projectsMapFiltered"
+                      [goalsMap]="goalsMap"
+                      [goalsBackground]="goalsBackgroundColor"
+                      [competenciesMap]="competenciesMap"
+                      [competenciesBackground]="competenciesBackgroundColor"
+                      [partnersMap]="partnersMap">
+    </app-project-list>
+</div>
