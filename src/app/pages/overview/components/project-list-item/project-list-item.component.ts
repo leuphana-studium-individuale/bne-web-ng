@@ -43,6 +43,5 @@ export class ProjectListItemComponent implements OnInit {
     }
 
     onDetailsButtonClicked() {
-        console.log('BOING');
     }
 }

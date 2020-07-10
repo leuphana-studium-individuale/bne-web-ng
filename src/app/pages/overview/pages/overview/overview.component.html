@@ -3,8 +3,10 @@
     <app-search-panel [goalsMap]="goalsMap"
                       [goalsBackgroundColor]="goalsBackgroundColor"
                       [competenciesMap]="competenciesMap"
+                      [competenciesBackgroundColor]="competenciesBackgroundColor"
                       [partnersMap]="partnersMap"
-                      (goalsSelectedEmitter)="onGoalsSelected($event)"></app-search-panel>
+                      (goalsSelectedEmitter)="onGoalsSelected($event)"
+                      (competenciesSelectedEmitter)="onCompetenciesSelected($event)"></app-search-panel>
 </div>
 
 <div class="content">

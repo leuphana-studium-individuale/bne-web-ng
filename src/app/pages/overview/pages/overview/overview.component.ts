@@ -47,6 +47,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     public partnersMap = new Map<string, Partner>();
 
     public goalsSelected = new Map<string, boolean>();
+    public competenciesSelected = new Map<string, boolean>();
 
     public goalsBackgroundColor = 'transparent';
     public competenciesBackgroundColor = 'transparent';
@@ -167,7 +168,6 @@ export class OverviewComponent implements OnInit, OnDestroy {
     }
 
     private initializeProjectsFiltered(projectsMap: Map<string, Project>) {
-        console.log(`initializeProjectsFiltered`);
         const projectsMapFiltered = new Map<string, Project>();
 
         Array.from(projectsMap.values()).filter(project => {
@@ -176,7 +176,6 @@ export class OverviewComponent implements OnInit, OnDestroy {
             projectsMapFiltered.set(project.id, project);
         });
 
-        console.log(`projectsMapFiltered ${Array.from(projectsMapFiltered.values()).length}`)
         this.projectsMapFiltered = new Map(projectsMapFiltered);
     }
 
@@ -205,6 +204,11 @@ export class OverviewComponent implements OnInit, OnDestroy {
         this.initializeProjectsFiltered(this.projectsMap);
     }
 
+    onCompetenciesSelected(event: any) {
+        this.competenciesSelected = event;
+        this.initializeProjectsFiltered(this.projectsMap);
+    }
+
     //
     //
     //
@@ -217,21 +221,29 @@ export class OverviewComponent implements OnInit, OnDestroy {
                 projectGoals.push(goal.title);
             }
         });
+        const projectCompetencies = [];
+        project.competencyIds.forEach(id => {
+            const competency = this.competenciesMap.get(id);
+            if (competency != null) {
+                projectCompetencies.push(competency.title);
+            }
+        });
 
         const noGoalSelected = !Array.from(this.goalsSelected.values()).some(selected => {
             return selected;
         });
         const matchesGoal = noGoalSelected || projectGoals.some(p => {
-            console.log(`projectGoal ${p}`);
-            // console.log(`goalsSelected ${Array.from(this.goalsSelected.values())}`);
-            // console.log(`goalsSelected ${Array.from(this.goalsSelected.keys())}`);
-            console.log(`goalsSelected.has(p) ${this.goalsSelected.has(p)}`);
-            console.log(`goalsSelected.get(p) ${this.goalsSelected.get(p)}`);
-
             return this.goalsSelected.has(p) && this.goalsSelected.get(p);
         });
 
-        return matchesGoal;
+        const noCompetencySelected = !Array.from(this.competenciesSelected.values()).some(selected => {
+            return selected;
+        });
+        const matchesCompetency = noCompetencySelected || projectCompetencies.some(p => {
+            return this.competenciesSelected.has(p) && this.competenciesSelected.get(p);
+        });
+
+        return matchesGoal && matchesCompetency;
     }
 
     protected findEntities(forceReload = false) {
