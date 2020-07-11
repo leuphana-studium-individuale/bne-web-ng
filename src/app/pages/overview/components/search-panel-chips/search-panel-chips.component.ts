@@ -8,6 +8,7 @@ import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '
 export class SearchPanelChipsComponent {
 
     @Input() valuesMap: Map<string, boolean> = new Map<string, boolean>();
+    @Input() border: string;
     @Input() background: string;
     /** Event emitter indicating changes in tags */
     @Output() tagsChangedEmitter = new EventEmitter<Map<string, boolean>>();

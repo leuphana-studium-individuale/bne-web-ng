@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
 export class SelectableTag {
     name: string;
@@ -30,6 +30,8 @@ export class SelectableTagChipsComponent implements OnChanges {
     @Input() tagOptions: string[] = [];
     /** Text color of the tag */
     @Input() color = 'black';
+    /** Border color of the tag */
+    @Input() border = 'transparent';
     /** Background color of the tag */
     @Input() background = 'transparent';
     /** Placeholder for new elements */
@@ -72,6 +74,11 @@ export class SelectableTagChipsComponent implements OnChanges {
     //
     // Helpers
     //
+
+    getBorder() {
+        console.log(`${this.border} 2px solid`);
+        return `${this.border} 2px solid`;
+    }
 
     getBackground(tag: SelectableTag) {
         return tag.selected ? this.background : 'transparent';
