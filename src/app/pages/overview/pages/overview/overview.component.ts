@@ -62,8 +62,11 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
     public selectableCompetenciesMap = new Map<number, SelectableCompetency>();
     public partnersMap = new Map<number, Partner>();
 
+    private priceLimit = 0;
+
     public goalsBackgroundColor = 'transparent';
     public competenciesBackgroundColor = 'transparent';
+    public costPerChildColor = 'transparent';
 
     goalsValuesMap: Map<string, boolean> = new Map<string, boolean>();
     competenciesValuesMap: Map<string, boolean> = new Map<string, boolean>();
@@ -90,6 +93,7 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
 
         this.goalsBackgroundColor = this.materialColorService.primary;
         this.competenciesBackgroundColor = this.materialColorService.accent;
+        this.costPerChildColor = this.materialColorService.primary;
 
         this.findEntities();
     }
@@ -114,6 +118,8 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
     onProjectsUpdated(projects: Map<number, Project>) {
         this.initializeProjects(projects);
         this.initializeProjectsFiltered(projects);
+
+        this.initializeFilters();
     }
 
     onGoalsUpdated(goals: Map<number, Goal>) {
@@ -227,14 +233,9 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
                 break;
             }
             case 'filter-reset': {
-                this.selectableGoalsMap.forEach((value: SelectableGoal, key: number) => {
-                    value.selected = false;
-                });
-                this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: number) => {
-                    value.selected = false;
-                });
+                this.initializeFilters();
 
-                // Initialize values for filter panel and refilter
+                // Initialize values for filter panel and re-filter
                 this.initializeValueMaps();
                 this.initializeProjectsFiltered(this.projectsMap);
                 break;
@@ -257,6 +258,11 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
         this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: number) => {
             value.selected = event.has(value.title) && event.get(value.title);
         });
+        this.initializeProjectsFiltered(this.projectsMap);
+    }
+
+    onPriceLimitSelected(event: number) {
+        this.priceLimit = event;
         this.initializeProjectsFiltered(this.projectsMap);
     }
 
@@ -298,13 +304,51 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
             });
         });
 
-        return matchesGoal && matchesCompetency;
+        const matchesPriceLimit = this.priceLimit === 0 || project.costPerChild <= this.priceLimit;
+
+        return matchesGoal && matchesCompetency && matchesPriceLimit;
     }
 
-    protected findEntities(forceReload = false) {
+    private findEntities(forceReload = false) {
         this.projectService.fetchProjects(forceReload);
         this.goalService.fetchGoals(forceReload);
         this.competencyService.fetchCompetencies(forceReload);
         this.partnerService.fetchPartners(forceReload);
+    }
+
+    //
+    // Helpers
+    //
+
+    getCostPerChildMax(): number {
+        let costPerChildMax = Number.MIN_VALUE;
+        this.projectsMap.forEach((value: Project, key: number) => {
+            if (value.costPerChild > costPerChildMax) {
+                costPerChildMax = value.costPerChild;
+            }
+        });
+
+        return costPerChildMax;
+    }
+
+    getCostPerChildMin(): number {
+        let costPerChildMin = Number.MAX_VALUE;
+        this.projectsMap.forEach((value: Project, key: number) => {
+            if (value.costPerChild < costPerChildMin) {
+                costPerChildMin = value.costPerChild;
+            }
+        });
+
+        return costPerChildMin;
+    }
+
+    private initializeFilters() {
+        this.selectableGoalsMap.forEach((value: SelectableGoal, key: number) => {
+            value.selected = false;
+        });
+        this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: number) => {
+            value.selected = false;
+        });
+        this.priceLimit = this.getCostPerChildMax();
     }
 }

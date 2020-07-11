@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Partner} from '../../../../core/entity/model/partner.model';
 
 @Component({
@@ -14,8 +14,14 @@ export class SearchPanelComponent {
     @Input() competenciesBackgroundColor: 'transparent';
     @Input() partnersMap: Map<string, Partner>;
 
+    @Input() costPerChildValue = 0;
+    @Input() costPerChildMin = 0;
+    @Input() costPerChildMax = 0;
+    @Input() costPerChildColor = 'transparent';
+
     @Output() goalsSelectedEmitter = new EventEmitter<Map<string, boolean>>();
     @Output() competenciesSelectedEmitter = new EventEmitter<Map<string, boolean>>();
+    @Output() priceSelectedEmitter = new EventEmitter<number>();
 
     onGoalsSelected(event: Map<string, boolean>) {
         this.goalsSelectedEmitter.emit(event);
@@ -23,5 +29,9 @@ export class SearchPanelComponent {
 
     onCompetenciesSelected(event: Map<string, boolean>) {
         this.competenciesSelectedEmitter.emit(event);
+    }
+
+    onPriceSelected(event: number) {
+        this.priceSelectedEmitter.emit(event);
     }
 }

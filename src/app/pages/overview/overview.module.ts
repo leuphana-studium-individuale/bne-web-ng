@@ -13,6 +13,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatIconModule} from '@angular/material/icon';
 import { SearchPanelComponent } from './components/search-panel/search-panel.component';
 import { SearchPanelChipsComponent } from './components/search-panel-chips/search-panel-chips.component';
+import { SearchPanelSliderComponent } from './components/search-panel-slider/search-panel-slider.component';
+import {MatSliderModule} from '@angular/material/slider';
 
 
 @NgModule({
@@ -22,7 +24,8 @@ import { SearchPanelChipsComponent } from './components/search-panel-chips/searc
         ProjectListComponent,
         ProjectListItemComponent,
         SearchPanelComponent,
-        SearchPanelChipsComponent
+        SearchPanelChipsComponent,
+        SearchPanelSliderComponent
     ],
     exports: [
         OverviewComponent
@@ -33,6 +36,7 @@ import { SearchPanelChipsComponent } from './components/search-panel-chips/searc
         MatButtonModule,
         MatCardModule,
         MatIconModule,
+        MatSliderModule,
         MatToolbarModule,
         MatTooltipModule,
         TagChipsModule

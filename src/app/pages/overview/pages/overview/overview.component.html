@@ -1,12 +1,18 @@
-<app-overview-toolbar [searchPanelState]="searchPanelState" (menuItemEventEmitter)="onMenuItemClicked($event)"></app-overview-toolbar>
+<app-overview-toolbar [searchPanelState]="searchPanelState"
+                      (menuItemEventEmitter)="onMenuItemClicked($event)"></app-overview-toolbar>
 <div [@searchPanelAnimation]="searchPanelState">
     <app-search-panel [goalsValuesMap]="goalsValuesMap"
                       [goalsBackgroundColor]="goalsBackgroundColor"
                       [competenciesValuesMap]="competenciesValuesMap"
                       [competenciesBackgroundColor]="competenciesBackgroundColor"
                       [partnersMap]="partnersMap"
+                      [costPerChildValue]=priceLimit
+                      [costPerChildMin]="getCostPerChildMin()"
+                      [costPerChildMax]="getCostPerChildMax()"
+                      [costPerChildColor]="costPerChildColor"
                       (goalsSelectedEmitter)="onGoalsSelected($event)"
-                      (competenciesSelectedEmitter)="onCompetenciesSelected($event)"></app-search-panel>
+                      (competenciesSelectedEmitter)="onCompetenciesSelected($event)"
+                      (priceSelectedEmitter)="onPriceLimitSelected($event)"></app-search-panel>
 </div>
 
 <div class="content">

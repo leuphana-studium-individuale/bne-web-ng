@@ -76,7 +76,6 @@ export class SelectableTagChipsComponent implements OnChanges {
     //
 
     getBorder() {
-        console.log(`${this.border} 2px solid`);
         return `${this.border} 2px solid`;
     }
 

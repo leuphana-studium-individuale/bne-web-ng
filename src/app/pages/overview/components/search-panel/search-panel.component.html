@@ -8,3 +8,9 @@
                         [background]="competenciesBackgroundColor"
                         (tagsChangedEmitter)="onCompetenciesSelected($event)">
 </app-search-panel-chips>
+<app-search-panel-slider [value]="costPerChildValue"
+                         [minValue]="costPerChildMin"
+                         [maxValue]="costPerChildMax"
+                         [color]="costPerChildColor"
+                         (valueChangedEmitter)="onPriceSelected($event)">
+</app-search-panel-slider>
