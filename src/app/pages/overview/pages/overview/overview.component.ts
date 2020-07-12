@@ -265,7 +265,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     }
 
     private initializeMaterial() {
-        this.materialIconService.initializeIcons(this.iconRegistry, this.sanitizer);
+        // this.materialIconService.initializeIcons(this.iconRegistry, this.sanitizer);
     }
 
     private initializeMaterialColors() {
