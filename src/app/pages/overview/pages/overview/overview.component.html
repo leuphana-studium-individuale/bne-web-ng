@@ -6,13 +6,27 @@
                       [competenciesValuesMap]="competenciesValuesMap"
                       [competenciesBackgroundColor]="competenciesBackgroundColor"
                       [partnersMap]="partnersMap"
+
                       [costPerChildValue]=priceLimit
                       [costPerChildMin]="getCostPerChildMin()"
                       [costPerChildMax]="getCostPerChildMax()"
                       [costPerChildColor]="costPerChildColor"
+
+                      [lessThanOneHour]="lessThanOneHour"
+                      [betweenOneAndTwoHours]="betweenOneAndTwoHours"
+                      [betweenTwoAndFourHours]="betweenTwoAndFourHours"
+                      [betweenOneAndTwoDays]="betweenOneAndTwoDays"
+                      [moreThanTwoDays]="moreThanTwoDays"
+
                       (goalsSelectedEmitter)="onGoalsSelected($event)"
                       (competenciesSelectedEmitter)="onCompetenciesSelected($event)"
-                      (priceSelectedEmitter)="onPriceLimitSelected($event)"></app-search-panel>
+                      (priceSelectedEmitter)="onPriceLimitSelected($event)"
+                      (lessThanOneHourChangedEmitter)="onLessThanOneHourChanged($event)"
+                      (betweenOneAndTwoHoursChangedEmitter)="onBetweenOneAndTwoHoursChanged($event)"
+                      (betweenTwoAndFourHoursChangedEmitter)="onBetweenTwoAndFourHoursChanged($event)"
+                      (betweenOneAndTwoDaysChangedEmitter)="onBetweenOneAndTwoDaysChanged($event)"
+                      (moreThanTwoDaysChangedEmitter)="onMoreThanTwoDaysChanged($event)">
+    </app-search-panel>
 </div>
 
 <div class="content">

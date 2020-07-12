@@ -1,11 +1,11 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
 @Component({
-    selector: 'app-search-panel-slider',
-    templateUrl: './search-panel-slider.component.html',
-    styleUrls: ['./search-panel-slider.component.scss']
+    selector: 'app-search-panel-costs',
+    templateUrl: './search-panel-costs.component.html',
+    styleUrls: ['./search-panel-costs.component.scss']
 })
-export class SearchPanelSliderComponent implements OnChanges {
+export class SearchPanelCostsComponent implements OnChanges {
 
     @Input() value = 0;
     @Input() minValue = 0;

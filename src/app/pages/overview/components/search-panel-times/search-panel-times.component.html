@@ -1,0 +1,17 @@
+<div class="content">
+    <mat-checkbox class="block" [checked]="lessThanOneHour" (change)="onLessThanOneHourChanged($event)">
+        < 1 Stunde
+    </mat-checkbox>
+    <mat-checkbox class="block" [checked]="betweenOneAndTwoHours" (change)="onBetweenOneAndTwoHoursChanged($event)">
+        1-2 Stunden
+    </mat-checkbox>
+    <mat-checkbox class="block" [checked]="betweenTwoAndFourHours" (change)="onBetweenTwoAndFourHoursChanged($event)">
+        2-4 Stunden
+    </mat-checkbox>
+    <mat-checkbox class="block" [checked]="betweenOneAndTwoDays" (change)="onBetweenOneAndTwoDaysChanged($event)">
+        1-2 Tage
+    </mat-checkbox>
+    <mat-checkbox class="block" [checked]="moreThanTwoDays" (change)="onMoreThanTwoDaysChanged($event)">
+        > 2 Tage
+    </mat-checkbox>
+</div>

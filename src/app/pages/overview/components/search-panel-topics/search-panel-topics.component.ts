@@ -1,11 +1,11 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
-    selector: 'app-search-panel-chips',
-    templateUrl: './search-panel-chips.component.html',
-    styleUrls: ['./search-panel-chips.component.scss']
+    selector: 'app-search-panel-topics',
+    templateUrl: './search-panel-topics.component.html',
+    styleUrls: ['./search-panel-topics.component.scss']
 })
-export class SearchPanelChipsComponent {
+export class SearchPanelTopicsComponent {
 
     @Input() valuesMap: Map<string, boolean> = new Map<string, boolean>();
     @Input() border: string;

@@ -12,9 +12,11 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatIconModule} from '@angular/material/icon';
 import { SearchPanelComponent } from './components/search-panel/search-panel.component';
-import { SearchPanelChipsComponent } from './components/search-panel-chips/search-panel-chips.component';
-import { SearchPanelSliderComponent } from './components/search-panel-slider/search-panel-slider.component';
+import { SearchPanelTopicsComponent } from './components/search-panel-topics/search-panel-topics.component';
+import { SearchPanelCostsComponent } from './components/search-panel-costs/search-panel-costs.component';
 import {MatSliderModule} from '@angular/material/slider';
+import { SearchPanelTimesComponent } from './components/search-panel-times/search-panel-times.component';
+import {MatCheckbox, MatCheckboxModule} from '@angular/material/checkbox';
 
 
 @NgModule({
@@ -24,8 +26,9 @@ import {MatSliderModule} from '@angular/material/slider';
         ProjectListComponent,
         ProjectListItemComponent,
         SearchPanelComponent,
-        SearchPanelChipsComponent,
-        SearchPanelSliderComponent
+        SearchPanelTopicsComponent,
+        SearchPanelCostsComponent,
+        SearchPanelTimesComponent
     ],
     exports: [
         OverviewComponent
@@ -35,6 +38,7 @@ import {MatSliderModule} from '@angular/material/slider';
         OverviewRoutingModule,
         MatButtonModule,
         MatCardModule,
+        MatCheckboxModule,
         MatIconModule,
         MatSliderModule,
         MatToolbarModule,

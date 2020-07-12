@@ -1,20 +1,20 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {SearchPanelSliderComponent} from './search-panel-slider.component';
+import {SearchPanelTimesComponent} from './search-panel-times.component';
 
-describe('SearchPanelSliderComponent', () => {
-    let component: SearchPanelSliderComponent;
-    let fixture: ComponentFixture<SearchPanelSliderComponent>;
+describe('SearchPanelTimesComponent', () => {
+    let component: SearchPanelTimesComponent;
+    let fixture: ComponentFixture<SearchPanelTimesComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [SearchPanelSliderComponent]
+            declarations: [SearchPanelTimesComponent]
         })
             .compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(SearchPanelSliderComponent);
+        fixture = TestBed.createComponent(SearchPanelTimesComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

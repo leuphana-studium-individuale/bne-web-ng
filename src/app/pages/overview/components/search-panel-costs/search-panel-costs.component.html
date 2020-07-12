@@ -1,0 +1,11 @@
+<div class="content">
+    <span>{{ minValue }} Euro</span>
+    <mat-slider [value]="value"
+                [min]="minValue"
+                [max]="maxValue"
+                [color]="color"
+                [thumbLabel]="true"
+                (valueChange)="onValueChanged($event)">
+    </mat-slider>
+    <span> {{ maxValue }} Euro pro Kind</span>
+</div>

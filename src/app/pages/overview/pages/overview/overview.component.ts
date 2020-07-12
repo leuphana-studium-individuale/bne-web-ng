@@ -58,11 +58,18 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
     /** Array of filtered projects */
     public projectsMapFiltered = new Map<number, Project>();
 
-    public selectableGoalsMap = new Map<number, SelectableGoal>();
-    public selectableCompetenciesMap = new Map<number, SelectableCompetency>();
-    public partnersMap = new Map<number, Partner>();
 
-    private priceLimit = 0;
+    // Filters
+
+    selectableGoalsMap = new Map<number, SelectableGoal>();
+    selectableCompetenciesMap = new Map<number, SelectableCompetency>();
+    partnersMap = new Map<number, Partner>();
+    priceLimit = 0;
+    lessThanOneHour = false;
+    betweenOneAndTwoHours = false;
+    betweenTwoAndFourHours = false;
+    betweenOneAndTwoDays = false;
+    moreThanTwoDays = false;
 
     public goalsBackgroundColor = 'transparent';
     public competenciesBackgroundColor = 'transparent';
@@ -90,11 +97,7 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
         this.initializeSubscriptions();
 
         this.initializeMaterial();
-
-        this.goalsBackgroundColor = this.materialColorService.primary;
-        this.competenciesBackgroundColor = this.materialColorService.accent;
-        this.costPerChildColor = this.materialColorService.primary;
-
+        this.initializeMaterialColors();
         this.findEntities();
     }
 
@@ -218,8 +221,14 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
         this.competenciesValuesMap = new Map(this.competenciesValuesMap);
     }
 
-    protected initializeMaterial() {
+    private initializeMaterial() {
         this.materialIconService.initializeIcons(this.iconRegistry, this.sanitizer);
+    }
+
+    private initializeMaterialColors() {
+        this.goalsBackgroundColor = this.materialColorService.primary;
+        this.competenciesBackgroundColor = this.materialColorService.accent;
+        this.costPerChildColor = this.materialColorService.primary;
     }
 
     //
@@ -266,6 +275,31 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
         this.initializeProjectsFiltered(this.projectsMap);
     }
 
+    onLessThanOneHourChanged(checked: boolean) {
+        this.lessThanOneHour = checked;
+        this.initializeProjectsFiltered(this.projectsMap);
+    }
+
+    onBetweenOneAndTwoHoursChanged(checked: boolean) {
+        this.betweenOneAndTwoHours = checked;
+        this.initializeProjectsFiltered(this.projectsMap);
+    }
+
+    onBetweenTwoAndFourHoursChanged(checked: boolean) {
+        this.betweenTwoAndFourHours = checked;
+        this.initializeProjectsFiltered(this.projectsMap);
+    }
+
+    onBetweenOneAndTwoDaysChanged(checked: boolean) {
+        this.betweenOneAndTwoDays = checked;
+        this.initializeProjectsFiltered(this.projectsMap);
+    }
+
+    onMoreThanTwoDaysChanged(checked: boolean) {
+        this.moreThanTwoDays = checked;
+        this.initializeProjectsFiltered(this.projectsMap);
+    }
+
     //
     //
     //
@@ -306,7 +340,17 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
 
         const matchesPriceLimit = this.priceLimit === 0 || project.costPerChild <= this.priceLimit;
 
-        return matchesGoal && matchesCompetency && matchesPriceLimit;
+        const noDurationSelected = !this.lessThanOneHour && !this.betweenOneAndTwoHours && !this.betweenTwoAndFourHours
+            && !this.betweenOneAndTwoDays && !this.moreThanTwoDays;
+        const matchesDuration = noDurationSelected || (
+            (this.lessThanOneHour && 0 <= project.effortInHours && project.effortInHours < 1)
+            || (this.betweenOneAndTwoHours && 1 <= project.effortInHours && project.effortInHours < 2)
+            || (this.betweenTwoAndFourHours && 2 <= project.effortInHours && project.effortInHours < 4)
+            || (this.betweenOneAndTwoDays && 4 <= project.effortInHours && project.effortInHours < 8)
+            || (this.moreThanTwoDays && 8 <= project.effortInHours)
+        );
+
+        return matchesGoal && matchesCompetency && matchesPriceLimit && matchesDuration;
     }
 
     private findEntities(forceReload = false) {
@@ -349,6 +393,22 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
         this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: number) => {
             value.selected = false;
         });
+
         this.priceLimit = this.getCostPerChildMax();
+        this.lessThanOneHour = Array.from(this.projectsMap.values()).some(p => {
+            return 0 <= p.effortInHours && p.effortInHours < 1;
+        });
+        this.betweenOneAndTwoHours = Array.from(this.projectsMap.values()).some(p => {
+            return 1 <= p.effortInHours && p.effortInHours < 2;
+        });
+        this.betweenTwoAndFourHours = Array.from(this.projectsMap.values()).some(p => {
+            return 2 <= p.effortInHours && p.effortInHours < 4;
+        });
+        this.betweenOneAndTwoDays = Array.from(this.projectsMap.values()).some(p => {
+            return 4 <= p.effortInHours && p.effortInHours < 8;
+        });
+        this.moreThanTwoDays = Array.from(this.projectsMap.values()).some(p => {
+            return 8 <= p.effortInHours;
+        });
     }
 }
