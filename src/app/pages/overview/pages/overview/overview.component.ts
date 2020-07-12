@@ -1,4 +1,4 @@
-import {Component, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ProjectService} from '../../../../core/entity/services/project.service';
 import {Subject} from 'rxjs';
 import {Project} from '../../../../core/entity/model/project.model';
@@ -16,7 +16,8 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 
 export class SelectableGoal extends Goal {
-    selected = false;
+    selected = true;
+    disabled = false;
 
     constructor(goal: Goal) {
         super(goal.id, goal.title, goal.shortDescription);
@@ -24,7 +25,8 @@ export class SelectableGoal extends Goal {
 }
 
 export class SelectableCompetency extends Competency {
-    selected = false;
+    selected = true;
+    disabled = false;
 
     constructor(competency: Competency) {
         super(competency.id, competency.title, competency.shortDescription);
@@ -51,32 +53,32 @@ export class SelectableCompetency extends Competency {
         ])
     ]
 })
-export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
+export class OverviewComponent implements OnInit, OnDestroy {
 
     /** Map of projects */
     public projectsMap = new Map<number, Project>();
     /** Array of filtered projects */
     public projectsMapFiltered = new Map<number, Project>();
 
-
-    // Filters
-
+    // Entities
     selectableGoalsMap = new Map<number, SelectableGoal>();
     selectableCompetenciesMap = new Map<number, SelectableCompetency>();
     partnersMap = new Map<number, Partner>();
-    priceLimit = 0;
-    lessThanOneHour = false;
-    betweenOneAndTwoHours = false;
-    betweenTwoAndFourHours = false;
-    betweenOneAndTwoDays = false;
-    moreThanTwoDays = false;
 
+    // Filters
+    goalsValuesMap: Map<string, [boolean, boolean]> = new Map<string, [boolean, boolean]>();
+    competenciesValuesMap: Map<string, [boolean, boolean]> = new Map<string, [boolean, boolean]>();
+    priceLimit = 0;
+    lessThanOneHour: [boolean, boolean] = [true, false];
+    betweenOneAndTwoHours: [boolean, boolean] = [true, false];
+    betweenTwoAndFourHours: [boolean, boolean] = [true, false];
+    betweenOneAndTwoDays: [boolean, boolean] = [true, false];
+    moreThanTwoDays: [boolean, boolean] = [true, false];
+
+    // Colors
     public goalsBackgroundColor = 'transparent';
     public competenciesBackgroundColor = 'transparent';
     public costPerChildColor = 'transparent';
-
-    goalsValuesMap: Map<string, boolean> = new Map<string, boolean>();
-    competenciesValuesMap: Map<string, boolean> = new Map<string, boolean>();
 
     searchPanelState = 'closed';
 
@@ -101,14 +103,6 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
         this.findEntities();
     }
 
-    ngOnChanges(changes: SimpleChanges) {
-
-        this.competenciesValuesMap = new Map<string, boolean>();
-        this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: number) => {
-            this.competenciesValuesMap.set(value.title, value.selected);
-        });
-    }
-
     ngOnDestroy() {
         this.unsubscribeSubject.next();
         this.unsubscribeSubject.complete();
@@ -120,24 +114,26 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
 
     onProjectsUpdated(projects: Map<number, Project>) {
         this.initializeProjects(projects);
-        this.initializeProjectsFiltered(projects);
-
         this.initializeFilters();
+        this.initializeProjectsFiltered(this.projectsMap);
     }
 
     onGoalsUpdated(goals: Map<number, Goal>) {
         this.initializeGoals(goals);
-        this.initializeValueMaps();
+        this.initializeFilters();
+        this.initializeProjectsFiltered(this.projectsMap);
     }
 
     onCompetenciesUpdated(competencies: Map<number, Competency>) {
         this.initializeCompetencies(competencies);
-        this.initializeValueMaps();
+        this.initializeFilters();
+        this.initializeProjectsFiltered(this.projectsMap);
     }
 
     onPartnersUpdated(partners: Map<number, Partner>) {
         this.initializePartners(partners);
-        this.initializeValueMaps();
+        this.initializeFilters();
+        this.initializeProjectsFiltered(this.projectsMap);
     }
 
     //
@@ -179,16 +175,18 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
         this.selectableGoalsMap = new Map<number, SelectableGoal>();
         goalsMap.forEach((value: Goal, key: number) => {
             this.selectableGoalsMap.set(key, new SelectableGoal(value));
-            this.goalsValuesMap.set(value.title, false);
         });
+
+        this.initializeFilters();
     }
 
     private initializeCompetencies(competenciesMap: Map<number, Competency>) {
         this.selectableCompetenciesMap = new Map<number, SelectableCompetency>();
         competenciesMap.forEach((value: Competency, key: number) => {
             this.selectableCompetenciesMap.set(key, new SelectableCompetency(value));
-            this.competenciesValuesMap.set(value.title, false);
         });
+
+        this.initializeFilters();
     }
 
     private initializePartners(partnersMap: Map<number, Partner>) {
@@ -208,17 +206,62 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
         this.projectsMapFiltered = new Map(projectsMapFiltered);
     }
 
-    private initializeValueMaps() {
+    private initializeFilters() {
         this.selectableGoalsMap.forEach((value: SelectableGoal, key: number) => {
-            this.goalsValuesMap.set(value.title, value.selected);
+            const existsInProjects = Array.from(this.projectsMap.values()).some(p => {
+                return p.sustainableDevelopmentGoalIds.some(id => {
+                    return value.id === id;
+                });
+            });
+
+            value.selected = existsInProjects;
+            value.disabled = !existsInProjects;
         });
         this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: number) => {
-            this.competenciesValuesMap.set(value.title, value.selected);
+            const existsInProjects = Array.from(this.projectsMap.values()).some(p => {
+                return p.competencyIds.some(id => {
+                    return value.id === id;
+                });
+            });
+
+            value.selected = existsInProjects;
+            value.disabled = !existsInProjects;
+        });
+
+        // Transform selectable maps to value maps
+        this.selectableGoalsMap.forEach((value: SelectableGoal, key: number) => {
+            this.goalsValuesMap.set(value.title, [value.selected, value.disabled]);
+        });
+        this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: number) => {
+            this.competenciesValuesMap.set(value.title, [value.selected, value.disabled]);
         });
 
         // Re-instantiate to trigger change detection
         this.goalsValuesMap = new Map(this.goalsValuesMap);
         this.competenciesValuesMap = new Map(this.competenciesValuesMap);
+
+        this.priceLimit = this.getCostPerChildMax();
+        const lessThanOneHourExists = Array.from(this.projectsMap.values()).some(p => {
+            return 0 <= p.effortInHours && p.effortInHours < 1;
+        });
+        const betweenOneAndTwoHoursExists = Array.from(this.projectsMap.values()).some(p => {
+            return 1 <= p.effortInHours && p.effortInHours < 2;
+        });
+        const betweenTwoAndFourHoursExists = Array.from(this.projectsMap.values()).some(p => {
+            return 2 <= p.effortInHours && p.effortInHours < 4;
+        });
+        const betweenOneAndTwoDaysExists = Array.from(this.projectsMap.values()).some(p => {
+            return 4 <= p.effortInHours && p.effortInHours < 8;
+        });
+        const moreThanTwoDaysExists = Array.from(this.projectsMap.values()).some(p => {
+            return 8 <= p.effortInHours;
+        });
+
+        this.lessThanOneHour = [lessThanOneHourExists, !lessThanOneHourExists];
+        this.betweenOneAndTwoHours = [betweenOneAndTwoHoursExists, !betweenOneAndTwoHoursExists];
+        this.betweenTwoAndFourHours = [betweenTwoAndFourHoursExists, !betweenTwoAndFourHoursExists];
+        this.betweenOneAndTwoDays = [betweenOneAndTwoDaysExists, !betweenOneAndTwoDaysExists];
+        this.moreThanTwoDays = [moreThanTwoDaysExists, !moreThanTwoDaysExists];
     }
 
     private initializeMaterial() {
@@ -243,9 +286,6 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
             }
             case 'filter-reset': {
                 this.initializeFilters();
-
-                // Initialize values for filter panel and re-filter
-                this.initializeValueMaps();
                 this.initializeProjectsFiltered(this.projectsMap);
                 break;
             }
@@ -255,17 +295,17 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    onGoalsSelected(event: Map<string, boolean>) {
+    onGoalsSelected(event: Map<string, [boolean, boolean]>) {
         this.selectableGoalsMap.forEach((value: SelectableGoal, key: number) => {
-            value.selected = event.has(value.title) && event.get(value.title);
+            value.selected = event.has(value.title) && event.get(value.title)[0];
         });
 
         this.initializeProjectsFiltered(this.projectsMap);
     }
 
-    onCompetenciesSelected(event: any) {
+    onCompetenciesSelected(event: Map<string, [boolean, boolean]>) {
         this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: number) => {
-            value.selected = event.has(value.title) && event.get(value.title);
+            value.selected = event.has(value.title) && event.get(value.title)[0];
         });
         this.initializeProjectsFiltered(this.projectsMap);
     }
@@ -275,28 +315,28 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
         this.initializeProjectsFiltered(this.projectsMap);
     }
 
-    onLessThanOneHourChanged(checked: boolean) {
-        this.lessThanOneHour = checked;
+    onLessThanOneHourChanged(event: [boolean, boolean]) {
+        this.lessThanOneHour = event;
         this.initializeProjectsFiltered(this.projectsMap);
     }
 
-    onBetweenOneAndTwoHoursChanged(checked: boolean) {
-        this.betweenOneAndTwoHours = checked;
+    onBetweenOneAndTwoHoursChanged(event: [boolean, boolean]) {
+        this.betweenOneAndTwoHours = event;
         this.initializeProjectsFiltered(this.projectsMap);
     }
 
-    onBetweenTwoAndFourHoursChanged(checked: boolean) {
-        this.betweenTwoAndFourHours = checked;
+    onBetweenTwoAndFourHoursChanged(event: [boolean, boolean]) {
+        this.betweenTwoAndFourHours = event;
         this.initializeProjectsFiltered(this.projectsMap);
     }
 
-    onBetweenOneAndTwoDaysChanged(checked: boolean) {
-        this.betweenOneAndTwoDays = checked;
+    onBetweenOneAndTwoDaysChanged(event: [boolean, boolean]) {
+        this.betweenOneAndTwoDays = event;
         this.initializeProjectsFiltered(this.projectsMap);
     }
 
-    onMoreThanTwoDaysChanged(checked: boolean) {
-        this.moreThanTwoDays = checked;
+    onMoreThanTwoDaysChanged(event: [boolean, boolean]) {
+        this.moreThanTwoDays = event;
         this.initializeProjectsFiltered(this.projectsMap);
     }
 
@@ -312,6 +352,7 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
                 projectGoals.push(goal.title);
             }
         });
+
         const projectCompetencies = [];
         project.competencyIds.forEach(id => {
             const competency = this.selectableCompetenciesMap.get(id);
@@ -320,35 +361,24 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
             }
         });
 
-        const noGoalSelected = !Array.from(this.selectableGoalsMap.values()).some(selectableGoal => {
-            return selectableGoal.selected;
-        });
-        const matchesGoal = noGoalSelected || projectGoals.some(projectGoal => {
+        const matchesGoal = projectGoals.some(projectGoal => {
             return Array.from(this.selectableGoalsMap.values()).some(selectableGoal => {
                 return selectableGoal.selected && selectableGoal.title === projectGoal;
             });
         });
 
-        const noCompetencySelected = !Array.from(this.selectableCompetenciesMap.values()).some(selectableCompetency => {
-            return selectableCompetency.selected;
-        });
-        const matchesCompetency = noCompetencySelected || projectCompetencies.some(projectCompetency => {
+        const matchesCompetency = projectCompetencies.some(projectCompetency => {
             return Array.from(this.selectableCompetenciesMap.values()).some(selectableCompetency => {
                 return selectableCompetency.selected && selectableCompetency.title === projectCompetency;
             });
         });
 
-        const matchesPriceLimit = this.priceLimit === 0 || project.costPerChild <= this.priceLimit;
-
-        const noDurationSelected = !this.lessThanOneHour && !this.betweenOneAndTwoHours && !this.betweenTwoAndFourHours
-            && !this.betweenOneAndTwoDays && !this.moreThanTwoDays;
-        const matchesDuration = noDurationSelected || (
-            (this.lessThanOneHour && 0 <= project.effortInHours && project.effortInHours < 1)
-            || (this.betweenOneAndTwoHours && 1 <= project.effortInHours && project.effortInHours < 2)
-            || (this.betweenTwoAndFourHours && 2 <= project.effortInHours && project.effortInHours < 4)
-            || (this.betweenOneAndTwoDays && 4 <= project.effortInHours && project.effortInHours < 8)
-            || (this.moreThanTwoDays && 8 <= project.effortInHours)
-        );
+        const matchesPriceLimit = project.costPerChild <= this.priceLimit;
+        const matchesDuration = (this.lessThanOneHour[0] && 0 <= project.effortInHours && project.effortInHours < 1)
+            || (this.betweenOneAndTwoHours[0] && 1 <= project.effortInHours && project.effortInHours < 2)
+            || (this.betweenTwoAndFourHours[0] && 2 <= project.effortInHours && project.effortInHours < 4)
+            || (this.betweenOneAndTwoDays[0] && 4 <= project.effortInHours && project.effortInHours < 8)
+            || (this.moreThanTwoDays[0] && 8 <= project.effortInHours);
 
         return matchesGoal && matchesCompetency && matchesPriceLimit && matchesDuration;
     }
@@ -384,31 +414,5 @@ export class OverviewComponent implements OnInit, OnChanges, OnDestroy {
         });
 
         return costPerChildMin;
-    }
-
-    private initializeFilters() {
-        this.selectableGoalsMap.forEach((value: SelectableGoal, key: number) => {
-            value.selected = false;
-        });
-        this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: number) => {
-            value.selected = false;
-        });
-
-        this.priceLimit = this.getCostPerChildMax();
-        this.lessThanOneHour = Array.from(this.projectsMap.values()).some(p => {
-            return 0 <= p.effortInHours && p.effortInHours < 1;
-        });
-        this.betweenOneAndTwoHours = Array.from(this.projectsMap.values()).some(p => {
-            return 1 <= p.effortInHours && p.effortInHours < 2;
-        });
-        this.betweenTwoAndFourHours = Array.from(this.projectsMap.values()).some(p => {
-            return 2 <= p.effortInHours && p.effortInHours < 4;
-        });
-        this.betweenOneAndTwoDays = Array.from(this.projectsMap.values()).some(p => {
-            return 4 <= p.effortInHours && p.effortInHours < 8;
-        });
-        this.moreThanTwoDays = Array.from(this.projectsMap.values()).some(p => {
-            return 8 <= p.effortInHours;
-        });
     }
 }

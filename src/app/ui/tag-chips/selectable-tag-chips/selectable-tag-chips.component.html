@@ -3,6 +3,7 @@
               [style.color]="color"
               [style.border]="getBorder()"
               [style.background]="getBackground(tag)"
+              [disabled]="getDisabled(tag)"
               (click)="onChipClicked(tag)">
         {{ tag.name }}
     </mat-chip>

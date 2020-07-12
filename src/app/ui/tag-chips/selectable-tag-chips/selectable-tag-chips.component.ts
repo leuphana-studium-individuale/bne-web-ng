@@ -3,10 +3,12 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Outp
 export class SelectableTag {
     name: string;
     selected: boolean;
+    disabled: boolean;
 
-    constructor(name: string, selected: boolean) {
+    constructor(name: string, selected: boolean, disabled: boolean) {
         this.name = name;
         this.selected = selected;
+        this.disabled = disabled;
     }
 }
 
@@ -22,8 +24,7 @@ export class SelectableTag {
 export class SelectableTagChipsComponent implements OnChanges {
 
     /** Tags to be displayed */
-    @Input() selectableTagsMap: Map<string, boolean> = new Map<string, boolean>();
-    /** Selected tags */
+    @Input() selectableTagsMap: Map<string, [boolean, boolean]> = new Map<string, [boolean, boolean]>();
     /** Whether the component is readonly */
     @Input() readonly = false;
     /** Array of options */
@@ -37,7 +38,7 @@ export class SelectableTagChipsComponent implements OnChanges {
     /** Placeholder for new elements */
     @Input() placeholder = 'New tag';
     /** Event emitter indicating changes in tags */
-    @Output() tagsChangedEmitter = new EventEmitter<Map<string, boolean>>();
+    @Output() tagsChangedEmitter = new EventEmitter<Map<string, [boolean, boolean]>>();
 
     selectableTags: SelectableTag[] = [];
 
@@ -55,8 +56,8 @@ export class SelectableTagChipsComponent implements OnChanges {
 
     private initializeSelectableTags() {
         this.selectableTags = [];
-        this.selectableTagsMap.forEach((value: boolean, key: string) => {
-            this.selectableTags.push(new SelectableTag(key, value));
+        this.selectableTagsMap.forEach((value: [boolean, boolean], key: string) => {
+            this.selectableTags.push(new SelectableTag(key, value[0], value[1]));
         });
     }
 
@@ -65,10 +66,12 @@ export class SelectableTagChipsComponent implements OnChanges {
     //
 
     onChipClicked(tag: SelectableTag) {
-        this.selectableTagsMap.set(tag.name, !tag.selected);
-        this.initializeSelectableTags();
+        if (!tag.disabled) {
+            this.selectableTagsMap.set(tag.name, [!tag.selected, tag.disabled]);
+            this.initializeSelectableTags();
 
-        this.tagsChangedEmitter.emit(this.selectableTagsMap);
+            this.tagsChangedEmitter.emit(this.selectableTagsMap);
+        }
     }
 
     //
@@ -81,5 +84,9 @@ export class SelectableTagChipsComponent implements OnChanges {
 
     getBackground(tag: SelectableTag) {
         return tag.selected ? this.background : 'transparent';
+    }
+
+    getDisabled(tag: SelectableTag) {
+        return tag.disabled;
     }
 }

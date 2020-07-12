@@ -8,9 +8,9 @@ import {Partner} from '../../../../core/entity/model/partner.model';
 })
 export class SearchPanelComponent {
 
-    @Input() goalsValuesMap: Map<string, boolean> = new Map<string, boolean>();
+    @Input() goalsValuesMap: Map<string, [boolean, boolean]> = new Map<string, [boolean, boolean]>();
     @Input() goalsBackgroundColor: 'transparent';
-    @Input() competenciesValuesMap: Map<string, boolean> = new Map<string, boolean>();
+    @Input() competenciesValuesMap: Map<string, [boolean, boolean]> = new Map<string, [boolean, boolean]>();
     @Input() competenciesBackgroundColor: 'transparent';
     @Input() partnersMap: Map<string, Partner>;
 
@@ -25,20 +25,20 @@ export class SearchPanelComponent {
     @Input() betweenOneAndTwoDays = false;
     @Input() moreThanTwoDays = false;
 
-    @Output() goalsSelectedEmitter = new EventEmitter<Map<string, boolean>>();
-    @Output() competenciesSelectedEmitter = new EventEmitter<Map<string, boolean>>();
+    @Output() goalsSelectedEmitter = new EventEmitter<Map<string, [boolean, boolean]>>();
+    @Output() competenciesSelectedEmitter = new EventEmitter<Map<string, [boolean, boolean]>>();
     @Output() priceSelectedEmitter = new EventEmitter<number>();
-    @Output() lessThanOneHourChangedEmitter = new EventEmitter<boolean>();
-    @Output() betweenOneAndTwoHoursChangedEmitter = new EventEmitter<boolean>();
-    @Output() betweenTwoAndFourHoursChangedEmitter = new EventEmitter<boolean>();
-    @Output() betweenOneAndTwoDaysChangedEmitter = new EventEmitter<boolean>();
-    @Output() moreThanTwoDaysChangedEmitter = new EventEmitter<boolean>();
+    @Output() lessThanOneHourChangedEmitter = new EventEmitter<[boolean, boolean]>();
+    @Output() betweenOneAndTwoHoursChangedEmitter = new EventEmitter<[boolean, boolean]>();
+    @Output() betweenTwoAndFourHoursChangedEmitter = new EventEmitter<[boolean, boolean]>();
+    @Output() betweenOneAndTwoDaysChangedEmitter = new EventEmitter<[boolean, boolean]>();
+    @Output() moreThanTwoDaysChangedEmitter = new EventEmitter<[boolean, boolean]>();
 
-    onGoalsSelected(event: Map<string, boolean>) {
+    onGoalsSelected(event: Map<string, [boolean, boolean]>) {
         this.goalsSelectedEmitter.emit(event);
     }
 
-    onCompetenciesSelected(event: Map<string, boolean>) {
+    onCompetenciesSelected(event: Map<string, [boolean, boolean]>) {
         this.competenciesSelectedEmitter.emit(event);
     }
 
@@ -46,23 +46,23 @@ export class SearchPanelComponent {
         this.priceSelectedEmitter.emit(event);
     }
 
-    onLessThanOneHourChanged(checked: boolean) {
-        this.lessThanOneHourChangedEmitter.emit(checked);
+    onLessThanOneHourChanged(value: [boolean, boolean]) {
+        this.lessThanOneHourChangedEmitter.emit(value);
     }
 
-    onBetweenOneAndTwoHoursChanged(checked: boolean) {
-        this.betweenOneAndTwoHoursChangedEmitter.emit(checked);
+    onBetweenOneAndTwoHoursChanged(value: [boolean, boolean]) {
+        this.betweenOneAndTwoHoursChangedEmitter.emit(value);
     }
 
-    onBetweenTwoAndFourHoursChanged(checked: boolean) {
-        this.betweenTwoAndFourHoursChangedEmitter.emit(checked);
+    onBetweenTwoAndFourHoursChanged(value: [boolean, boolean]) {
+        this.betweenTwoAndFourHoursChangedEmitter.emit(value);
     }
 
-    onBetweenOneAndTwoDaysChanged(checked: boolean) {
-        this.betweenOneAndTwoDaysChangedEmitter.emit(checked);
+    onBetweenOneAndTwoDaysChanged(value: [boolean, boolean]) {
+        this.betweenOneAndTwoDaysChangedEmitter.emit(value);
     }
 
-    onMoreThanTwoDaysChanged(checked: boolean) {
-        this.moreThanTwoDaysChangedEmitter.emit(checked);
+    onMoreThanTwoDaysChanged(value: [boolean, boolean]) {
+        this.moreThanTwoDaysChangedEmitter.emit(value);
     }
 }

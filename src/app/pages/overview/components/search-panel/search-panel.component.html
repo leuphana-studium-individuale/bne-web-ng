@@ -1,34 +1,39 @@
 <div class="content">
+    <h4>Sustainable Development Goal</h4>
     <app-search-panel-topics [valuesMap]="goalsValuesMap"
                              [border]="goalsBackgroundColor"
                              [background]="goalsBackgroundColor"
                              (tagsChangedEmitter)="onGoalsSelected($event)">
     </app-search-panel-topics>
+    <h4>Kompetenz</h4>
     <app-search-panel-topics [valuesMap]="competenciesValuesMap"
                              [border]="competenciesBackgroundColor"
                              [background]="competenciesBackgroundColor"
                              (tagsChangedEmitter)="onCompetenciesSelected($event)">
     </app-search-panel-topics>
     <div class="flexcontainer">
-        <app-search-panel-costs class="flexbox"
-                                [value]="costPerChildValue"
-                                [minValue]="costPerChildMin"
-                                [maxValue]="costPerChildMax"
-                                [color]="costPerChildColor"
-                                (valueChangedEmitter)="onPriceSelected($event)">
-        </app-search-panel-costs>
-        <!--    <div class="flexbox"></div>-->
-        <app-search-panel-times class="flexbox"
-                                [lessThanOneHour]="lessThanOneHour"
-                                [betweenOneAndTwoHours]="betweenOneAndTwoHours"
-                                [betweenTwoAndFourHours]="betweenTwoAndFourHours"
-                                [betweenOneAndTwoDays]="betweenOneAndTwoDays"
-                                [moreThanTwoDays]="moreThanTwoDays"
-                                (lessThanOneHourChangedEmitter)="onLessThanOneHourChanged($event)"
-                                (betweenOneAndTwoHoursChangedEmitter)="onBetweenOneAndTwoHoursChanged($event)"
-                                (betweenTwoAndFourHoursChangedEmitter)="onBetweenTwoAndFourHoursChanged($event)"
-                                (betweenOneAndTwoDaysChangedEmitter)="onBetweenOneAndTwoDaysChanged($event)"
-                                (moreThanTwoDaysChangedEmitter)="onMoreThanTwoDaysChanged($event)">
-        </app-search-panel-times>
+        <div class="flexbox">
+            <h4>Preis pro Kind</h4>
+            <app-search-panel-costs [value]="costPerChildValue"
+                                    [minValue]="costPerChildMin"
+                                    [maxValue]="costPerChildMax"
+                                    [color]="costPerChildColor"
+                                    (valueChangedEmitter)="onPriceSelected($event)">
+            </app-search-panel-costs>
+        </div>
+        <div class="flexbox">
+            <h4>Aufwand</h4>
+            <app-search-panel-times [lessThanOneHour]="lessThanOneHour"
+                                    [betweenOneAndTwoHours]="betweenOneAndTwoHours"
+                                    [betweenTwoAndFourHours]="betweenTwoAndFourHours"
+                                    [betweenOneAndTwoDays]="betweenOneAndTwoDays"
+                                    [moreThanTwoDays]="moreThanTwoDays"
+                                    (lessThanOneHourChangedEmitter)="onLessThanOneHourChanged($event)"
+                                    (betweenOneAndTwoHoursChangedEmitter)="onBetweenOneAndTwoHoursChanged($event)"
+                                    (betweenTwoAndFourHoursChangedEmitter)="onBetweenTwoAndFourHoursChanged($event)"
+                                    (betweenOneAndTwoDaysChangedEmitter)="onBetweenOneAndTwoDaysChanged($event)"
+                                    (moreThanTwoDaysChangedEmitter)="onMoreThanTwoDaysChanged($event)">
+            </app-search-panel-times>
+        </div>
     </div>
 </div>

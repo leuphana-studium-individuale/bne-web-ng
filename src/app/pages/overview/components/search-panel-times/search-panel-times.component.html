@@ -1,17 +1,32 @@
 <div class="content">
-    <mat-checkbox class="block" [checked]="lessThanOneHour" (change)="onLessThanOneHourChanged($event)">
-        < 1 Stunde
+    <mat-checkbox class="block"
+                  [checked]="lessThanOneHour[0]"
+                  [disabled]="lessThanOneHour[1]"
+                  (change)="onLessThanOneHourChanged($event)">
+        <span [class.disabled]="lessThanOneHour[1]">< 1 Stunde</span>
     </mat-checkbox>
-    <mat-checkbox class="block" [checked]="betweenOneAndTwoHours" (change)="onBetweenOneAndTwoHoursChanged($event)">
-        1-2 Stunden
+    <mat-checkbox class="block"
+                  [checked]="betweenOneAndTwoHours[0]"
+                  [disabled]="betweenOneAndTwoHours[1]"
+                  (change)="onBetweenOneAndTwoHoursChanged($event)">
+        <span [class.disabled]="betweenOneAndTwoHours[1]">1-2 Stunden</span>
     </mat-checkbox>
-    <mat-checkbox class="block" [checked]="betweenTwoAndFourHours" (change)="onBetweenTwoAndFourHoursChanged($event)">
-        2-4 Stunden
+    <mat-checkbox class="block"
+                  [checked]="betweenTwoAndFourHours[0]"
+                  [disabled]="betweenTwoAndFourHours[1]"
+                  (change)="onBetweenTwoAndFourHoursChanged($event)">
+        <span [class.disabled]="betweenTwoAndFourHours[1]">2-4 Stunden</span>
     </mat-checkbox>
-    <mat-checkbox class="block" [checked]="betweenOneAndTwoDays" (change)="onBetweenOneAndTwoDaysChanged($event)">
-        1-2 Tage
+    <mat-checkbox class="block"
+                  [checked]="betweenOneAndTwoDays[0]"
+                  [disabled]="betweenOneAndTwoDays[1]"
+                  (change)="onBetweenOneAndTwoDaysChanged($event)">
+        <span [class.disabled]="betweenOneAndTwoDays[1]">1-2 Tage</span>
     </mat-checkbox>
-    <mat-checkbox class="block" [checked]="moreThanTwoDays" (change)="onMoreThanTwoDaysChanged($event)">
-        > 2 Tage
+    <mat-checkbox class="block"
+                  [checked]="moreThanTwoDays[0]"
+                  [disabled]="moreThanTwoDays[1]"
+                  (change)="onMoreThanTwoDaysChanged($event)">
+        <span [class.disabled]="moreThanTwoDays[1]">> 2 Tage</span>
     </mat-checkbox>
 </div>
