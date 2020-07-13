@@ -1,0 +1,15 @@
+<mat-toolbar class="toolbar flexcontainer">
+
+    <button mat-button
+            class="toolbar-menu-item"
+            [matTooltip]="'Zurück'"
+            [matTooltipPosition]="'right'"
+            (click)="onBackClicked()">
+        <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="flexbox"></div>
+    <div class="project-title">
+        {{ title }}
+    </div>
+    <div class="flexbox"></div>
+</mat-toolbar>

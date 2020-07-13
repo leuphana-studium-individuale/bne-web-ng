@@ -7,6 +7,7 @@ import {environment} from '../environments/environment';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AppRoutingModule} from './app-routing.module';
 import {HttpClientModule} from '@angular/common/http';
+import { DetailsComponent } from './pages/details/pages/details/details.component';
 
 @NgModule({
     declarations: [

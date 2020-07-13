@@ -14,6 +14,7 @@ import {MaterialIconService} from '../../../../core/ui/services/material-icon.se
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import {Router} from '@angular/router';
 
 export class SelectableGoal extends Goal {
     selected = true;
@@ -42,12 +43,12 @@ export class SelectableCompetency extends Competency {
             state('open', style({
                 opacity: '1',
                 overflow: 'hidden',
-                height: '*',
+                height: '*'
             })),
             state('closed', style({
                 opacity: '0',
                 overflow: 'hidden',
-                height: '0px',
+                height: '0px'
             })),
             transition('* => *', animate('400ms ease-in-out'))
         ])
@@ -86,6 +87,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     public unsubscribeSubject = new Subject();
 
     constructor(private iconRegistry: MatIconRegistry,
+                private router: Router,
                 private sanitizer: DomSanitizer,
                 private materialColorService: MaterialColorService,
                 private materialIconService: MaterialIconService,
@@ -293,6 +295,10 @@ export class OverviewComponent implements OnInit, OnDestroy {
                 break;
             }
         }
+    }
+
+    onDetailsButtonClicked(event: number) {
+        this.router.navigate([`/details/${event}`]);
     }
 
     onGoalsSelected(event: Map<string, [boolean, boolean]>) {
