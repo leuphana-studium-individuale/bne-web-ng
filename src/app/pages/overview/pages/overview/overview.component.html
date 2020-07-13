@@ -1,12 +1,32 @@
-<app-overview-toolbar [searchPanelState]="searchPanelState" (menuItemEventEmitter)="onMenuItemClicked($event)"></app-overview-toolbar>
+<app-overview-toolbar [searchPanelState]="searchPanelState"
+                      (menuItemEventEmitter)="onMenuItemClicked($event)"></app-overview-toolbar>
 <div [@searchPanelAnimation]="searchPanelState">
     <app-search-panel [goalsValuesMap]="goalsValuesMap"
                       [goalsBackgroundColor]="goalsBackgroundColor"
                       [competenciesValuesMap]="competenciesValuesMap"
                       [competenciesBackgroundColor]="competenciesBackgroundColor"
                       [partnersMap]="partnersMap"
+
+                      [costPerChildValue]=priceLimit
+                      [costPerChildMin]="getCostPerChildMin()"
+                      [costPerChildMax]="getCostPerChildMax()"
+                      [costPerChildColor]="costPerChildColor"
+
+                      [lessThanOneHour]="lessThanOneHour"
+                      [betweenOneAndTwoHours]="betweenOneAndTwoHours"
+                      [betweenTwoAndFourHours]="betweenTwoAndFourHours"
+                      [betweenOneAndTwoDays]="betweenOneAndTwoDays"
+                      [moreThanTwoDays]="moreThanTwoDays"
+
                       (goalsSelectedEmitter)="onGoalsSelected($event)"
-                      (competenciesSelectedEmitter)="onCompetenciesSelected($event)"></app-search-panel>
+                      (competenciesSelectedEmitter)="onCompetenciesSelected($event)"
+                      (priceSelectedEmitter)="onPriceLimitSelected($event)"
+                      (lessThanOneHourChangedEmitter)="onLessThanOneHourChanged($event)"
+                      (betweenOneAndTwoHoursChangedEmitter)="onBetweenOneAndTwoHoursChanged($event)"
+                      (betweenTwoAndFourHoursChangedEmitter)="onBetweenTwoAndFourHoursChanged($event)"
+                      (betweenOneAndTwoDaysChangedEmitter)="onBetweenOneAndTwoDaysChanged($event)"
+                      (moreThanTwoDaysChangedEmitter)="onMoreThanTwoDaysChanged($event)">
+    </app-search-panel>
 </div>
 
 <div class="content">
@@ -15,6 +35,7 @@
                       [goalsBackground]="goalsBackgroundColor"
                       [competenciesMap]="selectableCompetenciesMap"
                       [competenciesBackground]="competenciesBackgroundColor"
-                      [partnersMap]="partnersMap">
+                      [partnersMap]="partnersMap"
+                      (detailsButtonClickedEventEmitter)="onDetailsButtonClicked($event)">
     </app-project-list>
 </div>

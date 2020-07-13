@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Project} from '../../../../core/entity/model/project.model';
 import {Goal} from '../../../../core/entity/model/goal.model';
 import {Partner} from '../../../../core/entity/model/partner.model';
@@ -14,11 +14,12 @@ export class ProjectListItemComponent implements OnInit {
 
     @Input() project: Project;
 
-    @Input() goalsMap: Map<string, Goal>;
+    @Input() goalsMap: Map<number, Goal>;
     @Input() goalsBackground: 'transparent';
-    @Input() competenciesMap: Map<string, Competency>;
+    @Input() competenciesMap: Map<number, Competency>;
     @Input() competenciesBackground: 'transparent';
     @Input() partnersMap: Map<string, Partner>;
+    @Output() detailsButtonClickedEventEmitter = new EventEmitter<number>();
 
     projectGoals = [];
     projectCompetencies = [];
@@ -43,5 +44,6 @@ export class ProjectListItemComponent implements OnInit {
     }
 
     onDetailsButtonClicked() {
+        this.detailsButtonClickedEventEmitter.emit(this.project.id);
     }
 }

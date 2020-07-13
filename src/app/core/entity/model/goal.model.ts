@@ -2,12 +2,12 @@
  * Represents a sustainable development goal
  */
 export class Goal {
-    index: number;
+    id: number;
     title: string;
     shortDescription: string;
 
-    constructor(index: number, title: string, shortDescription: string) {
-        this.index = index;
+    constructor(id: number, title: string, shortDescription: string) {
+        this.id = id;
         this.title = title;
         this.shortDescription = shortDescription;
     }

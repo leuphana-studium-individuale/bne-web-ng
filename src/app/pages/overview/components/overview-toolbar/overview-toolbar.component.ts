@@ -10,12 +10,12 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
             state('open', style({
                 opacity: '1',
                 overflow: 'hidden',
-                width: '*',
+                width: '*'
             })),
             state('closed', style({
                 opacity: '0',
                 overflow: 'hidden',
-                width: '0px',
+                width: '0px'
             })),
             transition('* => *', animate('400ms ease-in-out'))
         ])

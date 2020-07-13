@@ -1,13 +1,15 @@
 <mat-card class="project">
+    <img *ngIf="project.logoName !== ''" mat-card-image
+         [attr.src]="project.logoName">
     <mat-card-title>{{ project.title}}</mat-card-title>
     <mat-card-subtitle>{{ project.description }}</mat-card-subtitle>
     <mat-card-content>
     </mat-card-content>
     <mat-card-actions>
+        <app-tag-chips [tags]="projectGoals" [readonly]="true" [background]="goalsBackground"></app-tag-chips>
+        <app-tag-chips [tags]="projectCompetencies" [readonly]="true"
+                       [background]="competenciesBackground"></app-tag-chips>
         <div class="flexcontainer">
-            <app-tag-chips [tags]="projectGoals" [readonly]="true" [background]="goalsBackground"></app-tag-chips>
-            <app-tag-chips [tags]="projectCompetencies" [readonly]="true" [background]="competenciesBackground"></app-tag-chips>
-            <app-tag-chips [readonly]="true"></app-tag-chips>
             <div class="flexbox"></div>
             <button mat-button (click)="onDetailsButtonClicked()">
                 Detailansicht

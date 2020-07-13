@@ -1,0 +1,37 @@
+<app-details-toolbar *ngIf="project != null"
+                     [title]="project.title"
+                     (menuItemEventEmitter)="onMenuItemClicked($event)">
+</app-details-toolbar>
+
+<div *ngIf="project != null" class="content">
+    <img *ngIf="project.logoName !== ''" mat-card-image class="project-logo"
+         [attr.src]="project.logoName">
+    <div class="project-basic-information flexcontainer">
+        <div class="flexbox">
+            <mat-icon class="project-basic-information-logo">euro_symbol</mat-icon>
+            <span class="project-basic-information-text">{{ project.costPerChild }} Euro pro Kind</span>
+        </div>
+        <div class="flexbox"></div>
+        <div class="flexbox">
+            <mat-icon class="project-basic-information-logo">schedule</mat-icon>
+            <span class="project-basic-information-text">{{ project.effortInHours }}h Aufwand</span>
+        </div>
+    </div>
+    <div class="project-tags">
+        <app-tag-chips [tags]="projectGoals" [readonly]="true" [background]="goalsBackgroundColor"></app-tag-chips>
+        <app-tag-chips [tags]="projectCompetencies" [readonly]="true"
+                       [background]="competenciesBackgroundColor"></app-tag-chips>
+    </div>
+    <div class="project-detailed-information">
+        {{ project.description }}
+    </div>
+    <div class="project-action flexcontainer" *ngIf="partner != null">
+        <button mat-button color="accent" (click)="onCallButtonClicked(partner.phone)">
+            {{ partner.phone }} anrufen
+        </button>
+        <div class="flexbox"></div>
+        <button mat-button color="accent" (click)="onMailButtonClicked(partner.mail)">
+            an {{ partner.mail }} schreiben
+        </button>
+    </div>
+</div>

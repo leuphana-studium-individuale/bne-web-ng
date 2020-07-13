@@ -1,12 +1,14 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
 export class SelectableTag {
     name: string;
     selected: boolean;
+    disabled: boolean;
 
-    constructor(name: string, selected: boolean) {
+    constructor(name: string, selected: boolean, disabled: boolean) {
         this.name = name;
         this.selected = selected;
+        this.disabled = disabled;
     }
 }
 
@@ -22,20 +24,21 @@ export class SelectableTag {
 export class SelectableTagChipsComponent implements OnChanges {
 
     /** Tags to be displayed */
-    @Input() selectableTagsMap: Map<string, boolean> = new Map<string, boolean>();
-    /** Selected tags */
+    @Input() selectableTagsMap: Map<string, [boolean, boolean]> = new Map<string, [boolean, boolean]>();
     /** Whether the component is readonly */
     @Input() readonly = false;
     /** Array of options */
     @Input() tagOptions: string[] = [];
     /** Text color of the tag */
     @Input() color = 'black';
+    /** Border color of the tag */
+    @Input() border = 'transparent';
     /** Background color of the tag */
     @Input() background = 'transparent';
     /** Placeholder for new elements */
     @Input() placeholder = 'New tag';
     /** Event emitter indicating changes in tags */
-    @Output() tagsChangedEmitter = new EventEmitter<Map<string, boolean>>();
+    @Output() tagsChangedEmitter = new EventEmitter<Map<string, [boolean, boolean]>>();
 
     selectableTags: SelectableTag[] = [];
 
@@ -53,8 +56,8 @@ export class SelectableTagChipsComponent implements OnChanges {
 
     private initializeSelectableTags() {
         this.selectableTags = [];
-        this.selectableTagsMap.forEach((value: boolean, key: string) => {
-            this.selectableTags.push(new SelectableTag(key, value));
+        this.selectableTagsMap.forEach((value: [boolean, boolean], key: string) => {
+            this.selectableTags.push(new SelectableTag(key, value[0], value[1]));
         });
     }
 
@@ -63,17 +66,27 @@ export class SelectableTagChipsComponent implements OnChanges {
     //
 
     onChipClicked(tag: SelectableTag) {
-        this.selectableTagsMap.set(tag.name, !tag.selected);
-        this.initializeSelectableTags();
+        if (!tag.disabled) {
+            this.selectableTagsMap.set(tag.name, [!tag.selected, tag.disabled]);
+            this.initializeSelectableTags();
 
-        this.tagsChangedEmitter.emit(this.selectableTagsMap);
+            this.tagsChangedEmitter.emit(this.selectableTagsMap);
+        }
     }
 
     //
     // Helpers
     //
 
+    getBorder() {
+        return `${this.border} 2px solid`;
+    }
+
     getBackground(tag: SelectableTag) {
         return tag.selected ? this.background : 'transparent';
+    }
+
+    getDisabled(tag: SelectableTag) {
+        return tag.disabled;
     }
 }

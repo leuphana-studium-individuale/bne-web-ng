@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs';
 import {Partner} from '../model/partner.model';
+import {PARTNER_DATA} from '../model/partner.mock';
 
 @Injectable({
     providedIn: 'root'
@@ -11,10 +12,10 @@ export class PartnerService {
     }
 
     /** Subject that publishes partners */
-    partnersSubject = new Subject<Map<string, Partner>>();
+    partnersSubject = new Subject<Map<number, Partner>>();
 
     /** Map of partners */
-    private partners: Map<string, Partner>;
+    private partners: Map<number, Partner>;
 
     public fetchPartners(forceReload = false) {
         if (this.partners != null && !forceReload) {
@@ -25,13 +26,11 @@ export class PartnerService {
     }
 
     private findPartners() {
-        const partnersMap = new Map<string, Partner>();
-        partnersMap.set('1', new Partner(
-            'GemüseAckerdemie',
-            'Wir ackern für Bildung und Ernährung. Mit unseren Projekten für Kinder und Jugendliche stärken wir die Wertschätzung von Lebensmitteln.',
-            '+49 123 444 555',
-            'info@ackerdemia.de'
-        ));
+        const partnersMap = new Map<number, Partner>();
+
+        PARTNER_DATA.forEach(p => {
+            partnersMap.set(p.id, p);
+        });
 
         this.notifyPartners(partnersMap);
     }
@@ -40,7 +39,7 @@ export class PartnerService {
      * Notifies subscribers that something has changed
      * @param partnersMap partners map
      */
-    public notifyPartners(partnersMap: Map<string, Partner>) {
+    public notifyPartners(partnersMap: Map<number, Partner>) {
         this.partnersSubject.next(partnersMap);
     }
 }

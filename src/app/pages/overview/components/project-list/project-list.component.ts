@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Project} from '../../../../core/entity/model/project.model';
 import {Goal} from '../../../../core/entity/model/goal.model';
 import {Competency} from '../../../../core/entity/model/competency.model';
@@ -19,6 +19,7 @@ export class ProjectListComponent implements OnChanges {
     @Input() competenciesMap: Map<string, Competency>;
     @Input() competenciesBackground: 'transparent';
     @Input() partnersMap: Map<string, Partner>;
+    @Output() detailsButtonClickedEventEmitter = new EventEmitter<number>();
 
     /** Projects to be displayed */
     projects = [];
@@ -35,5 +36,9 @@ export class ProjectListComponent implements OnChanges {
      */
     private initializeProjects() {
         this.projects = Array.from(this.projectsMap.values());
+    }
+
+    onDetailsButtonClicked(event: number) {
+        this.detailsButtonClickedEventEmitter.emit(event);
     }
 }
