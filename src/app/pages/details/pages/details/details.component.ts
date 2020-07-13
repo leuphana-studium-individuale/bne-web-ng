@@ -55,7 +55,6 @@ export class DetailsComponent implements OnInit, OnDestroy {
         this.route.params.subscribe(() => {
             if (this.route.snapshot != null) {
                 this.id = +this.route.snapshot.paramMap.get('id');
-                console.log(`id ${this.id}`);
                 this.findEntities();
             }
         });
