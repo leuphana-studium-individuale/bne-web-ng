@@ -1,5 +1,8 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
+/**
+ * Displays search for costs
+ */
 @Component({
     selector: 'app-search-panel-costs',
     templateUrl: './search-panel-costs.component.html',
@@ -7,18 +10,38 @@ import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '
 })
 export class SearchPanelCostsComponent implements OnChanges {
 
-    @Input() value = 0;
-    @Input() minValue = 0;
-    @Input() maxValue = 0;
-    @Input() color = 'primary';
+    /** Filter value for costs per child */
+    @Input() costPerChildValue = 0;
+    /** Minimum value for costs per child */
+    @Input() costPerChildMin = 0;
+    /** Maximum value for costs per child */
+    @Input() costPerChildMax = 0;
+    /** Color for cost slider */
+    @Input() costPerChildColor = 'primary';
+    /** Event emitter indicating value being changed */
     @Output() valueChangedEmitter = new EventEmitter<number>();
 
-    ngOnChanges(changes: SimpleChanges): void {
-        this.color = 'primary';
+    //
+    // Lifecycle hooks
+    //
+
+    /**
+     * Handles on-changes lifecycle phase
+     */
+    ngOnChanges(changes: SimpleChanges) {
+        this.costPerChildColor = 'primary';
     }
 
+    //
+    // Actions
+    //
+
+    /**
+     * Handles value change
+     * @param event new value
+     */
     onValueChanged(event: number) {
-        this.value = event;
+        this.costPerChildValue = event;
         this.valueChangedEmitter.emit(event);
     }
 }

@@ -15,25 +15,47 @@ import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {Router} from '@angular/router';
+import {FilterService} from '../../../../core/entity/services/filter.service';
 
+/**
+ * Extends goal by attributes to make it selectable
+ */
 export class SelectableGoal extends Goal {
+    /** Whether the goal is selected */
     selected = true;
+    /** Whether the goal is selectable */
     disabled = false;
 
+    /**
+     * Constructor
+     * @param goal goal
+     */
     constructor(goal: Goal) {
-        super(goal.id, goal.title, goal.shortDescription);
+        super(goal.id, goal.title, goal.description);
     }
 }
 
+/**
+ * Extends competency by attributes to make it selectable
+ */
 export class SelectableCompetency extends Competency {
+    /** Whether the competency is selected */
     selected = true;
+    /** Whether the competency is selectable */
     disabled = false;
 
+    /**
+     * Constructor
+     * @param competency competency
+     */
     constructor(competency: Competency) {
-        super(competency.id, competency.title, competency.shortDescription);
+        super(competency.id, competency.title, competency.description);
     }
 }
 
+/**
+ * Displays overview page
+ */
 @Component({
     selector: 'app-overview',
     templateUrl: './overview.component.html',
@@ -60,43 +82,75 @@ export class OverviewComponent implements OnInit, OnDestroy {
     public projectsMap = new Map<number, Project>();
     /** Array of filtered projects */
     public projectsMapFiltered = new Map<number, Project>();
-
-    // Entities
+    /** Map of goals */
     selectableGoalsMap = new Map<number, SelectableGoal>();
+    /** Map of competencies */
     selectableCompetenciesMap = new Map<number, SelectableCompetency>();
+    /** Map of partners */
     partnersMap = new Map<number, Partner>();
 
-    // Filters: First boolean refers to selection state, second to activation state
+    /** Filter values for goals */
     goalsValuesMap: Map<string, [boolean, boolean]> = new Map<string, [boolean, boolean]>();
+    /** Filter values for competencies */
     competenciesValuesMap: Map<string, [boolean, boolean]> = new Map<string, [boolean, boolean]>();
-    priceLimit = 0;
+    /** Filter value for costs per child */
+    costsPerChildLimit = 0;
+    /** Filter value for effort */
     lessThanOneHour: [boolean, boolean] = [true, false];
+    /** Filter value for effort */
     betweenOneAndTwoHours: [boolean, boolean] = [true, false];
+    /** Filter value for effort */
     betweenTwoAndFourHours: [boolean, boolean] = [true, false];
+    /** Filter value for effort */
     betweenOneAndTwoDays: [boolean, boolean] = [true, false];
+    /** Filter value for effort */
     moreThanTwoDays: [boolean, boolean] = [true, false];
 
-    // Colors
+    /** Background color for goal tags */
     public goalsBackgroundColor = 'transparent';
+    /** Background color for competencies tags */
     public competenciesBackgroundColor = 'transparent';
+    /** Color for cost-per-child slider */
     public costPerChildColor = 'transparent';
 
+    /** State of the search panel */
     searchPanelState = 'closed';
 
     /** Helper subject used to finish other subscriptions */
     public unsubscribeSubject = new Subject();
 
-    constructor(private iconRegistry: MatIconRegistry,
-                private router: Router,
-                private sanitizer: DomSanitizer,
+    /**
+     * Constructor
+     * @param competencyService competency service
+     * @param filterService filter service
+     * @param goalService goal service
+     * @param iconRegistry icon registry
+     * @param materialColorService material color service
+     * @param materialIconService material icon service
+     * @param partnerService partner service
+     * @param projectService project service
+     * @param router router
+     * @param sanitizer sanitizer
+     */
+    constructor(private competencyService: CompetencyService,
+                private filterService: FilterService,
+                private goalService: GoalService,
+                private iconRegistry: MatIconRegistry,
                 private materialColorService: MaterialColorService,
                 private materialIconService: MaterialIconService,
+                private partnerService: PartnerService,
                 private projectService: ProjectService,
-                private goalService: GoalService,
-                private competencyService: CompetencyService,
-                private partnerService: PartnerService) {
+                private router: Router,
+                private sanitizer: DomSanitizer) {
     }
 
+    //
+    // Lifecycle hooks
+    //
+
+    /**
+     * Handles on-init lifecycle phase
+     */
     ngOnInit() {
         this.initializeSubscriptions();
 
@@ -105,43 +159,21 @@ export class OverviewComponent implements OnInit, OnDestroy {
         this.findEntities();
     }
 
+    /**
+     * Handles on-destroy lifecycle phase
+     */
     ngOnDestroy() {
         this.unsubscribeSubject.next();
         this.unsubscribeSubject.complete();
     }
 
     //
-    // Events
-    //
-
-    onProjectsUpdated(projects: Map<number, Project>) {
-        this.initializeProjects(projects);
-        this.initializeFilters();
-        this.initializeProjectsFiltered(this.projectsMap);
-    }
-
-    onGoalsUpdated(goals: Map<number, Goal>) {
-        this.initializeGoals(goals);
-        this.initializeFilters();
-        this.initializeProjectsFiltered(this.projectsMap);
-    }
-
-    onCompetenciesUpdated(competencies: Map<number, Competency>) {
-        this.initializeCompetencies(competencies);
-        this.initializeFilters();
-        this.initializeProjectsFiltered(this.projectsMap);
-    }
-
-    onPartnersUpdated(partners: Map<number, Partner>) {
-        this.initializePartners(partners);
-        this.initializeFilters();
-        this.initializeProjectsFiltered(this.projectsMap);
-    }
-
-    //
     // Initialization
     //
 
+    /**
+     * Initializes subscriptions
+     */
     private initializeSubscriptions() {
         this.projectService.projectsSubject.pipe(
             takeUntil(this.unsubscribeSubject),
@@ -169,10 +201,16 @@ export class OverviewComponent implements OnInit, OnDestroy {
         });
     }
 
+    /**
+     * Initializes projects
+     */
     private initializeProjects(projectsMap: Map<number, Project>) {
         this.projectsMap = new Map(projectsMap);
     }
 
+    /**
+     * Initializes goals
+     */
     private initializeGoals(goalsMap: Map<number, Goal>) {
         this.selectableGoalsMap = new Map<number, SelectableGoal>();
         goalsMap.forEach((value: Goal, key: number) => {
@@ -182,6 +220,9 @@ export class OverviewComponent implements OnInit, OnDestroy {
         this.initializeFilters();
     }
 
+    /**
+     * Initializes competencies
+     */
     private initializeCompetencies(competenciesMap: Map<number, Competency>) {
         this.selectableCompetenciesMap = new Map<number, SelectableCompetency>();
         competenciesMap.forEach((value: Competency, key: number) => {
@@ -191,6 +232,9 @@ export class OverviewComponent implements OnInit, OnDestroy {
         this.initializeFilters();
     }
 
+    /**
+     * Initializes partners
+     */
     private initializePartners(partnersMap: Map<number, Partner>) {
         this.partnersMap = new Map(partnersMap);
     }
@@ -199,7 +243,9 @@ export class OverviewComponent implements OnInit, OnDestroy {
         const projectsMapFiltered = new Map<number, Project>();
 
         Array.from(projectsMap.values()).filter(project => {
-            return this.filterProject(project);
+            return this.filterService.filterProject(project, this.selectableGoalsMap, this.selectableCompetenciesMap,
+                this.costsPerChildLimit, this.lessThanOneHour, this.betweenOneAndTwoHours,
+                this.betweenTwoAndFourHours, this.betweenOneAndTwoDays, this.moreThanTwoDays);
         }).forEach(project => {
             projectsMapFiltered.set(project.id, project);
         });
@@ -242,7 +288,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
         this.goalsValuesMap = new Map(this.goalsValuesMap);
         this.competenciesValuesMap = new Map(this.competenciesValuesMap);
 
-        this.priceLimit = this.getCostPerChildMax();
+        this.costsPerChildLimit = this.getCostPerChildMax();
         const lessThanOneHourExists = Array.from(this.projectsMap.values()).some(p => {
             return 0 <= p.effortInHours && p.effortInHours < 1;
         });
@@ -266,10 +312,16 @@ export class OverviewComponent implements OnInit, OnDestroy {
         this.moreThanTwoDays = [false, !moreThanTwoDaysExists];
     }
 
+    /**
+     * Initializes material icons
+     */
     private initializeMaterial() {
         // this.materialIconService.initializeIcons(this.iconRegistry, this.sanitizer);
     }
 
+    /**
+     * Initializes material colors
+     */
     private initializeMaterialColors() {
         this.goalsBackgroundColor = this.materialColorService.primary;
         this.competenciesBackgroundColor = this.materialColorService.accent;
@@ -277,9 +329,57 @@ export class OverviewComponent implements OnInit, OnDestroy {
     }
 
     //
+    // Events
+    //
+
+    /**
+     * Handles projects being loaded
+     * @param projects projects
+     */
+    onProjectsUpdated(projects: Map<number, Project>) {
+        this.initializeProjects(projects);
+        this.initializeFilters();
+        this.initializeProjectsFiltered(this.projectsMap);
+    }
+
+    /**
+     * Handles goals being loaded
+     * @param goals goals
+     */
+    onGoalsUpdated(goals: Map<number, Goal>) {
+        this.initializeGoals(goals);
+        this.initializeFilters();
+        this.initializeProjectsFiltered(this.projectsMap);
+    }
+
+    /**
+     * Handles competencies being loaded
+     * @param competencies competencies
+     */
+    onCompetenciesUpdated(competencies: Map<number, Competency>) {
+        this.initializeCompetencies(competencies);
+        this.initializeFilters();
+        this.initializeProjectsFiltered(this.projectsMap);
+    }
+
+    /**
+     * Handles partners being loaded
+     * @param partners partners
+     */
+    onPartnersUpdated(partners: Map<number, Partner>) {
+        this.initializePartners(partners);
+        this.initializeFilters();
+        this.initializeProjectsFiltered(this.projectsMap);
+    }
+
+    //
     // Actions
     //
 
+    /**
+     * Handles click on menu item
+     * @param menuItem menu item
+     */
     onMenuItemClicked(menuItem: string) {
         switch (menuItem) {
             case 'filter': {
@@ -297,10 +397,18 @@ export class OverviewComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Handles details button being clicked
+     * @param event project ID
+     */
     onDetailsButtonClicked(event: number) {
         this.router.navigate([`/details/${event}`]);
     }
 
+    /**
+     * Handles selection of goals
+     * @param event map of goals
+     */
     onGoalsSelected(event: Map<string, [boolean, boolean]>) {
         this.selectableGoalsMap.forEach((value: SelectableGoal, key: number) => {
             value.selected = event.has(value.title) && event.get(value.title)[0];
@@ -309,6 +417,10 @@ export class OverviewComponent implements OnInit, OnDestroy {
         this.initializeProjectsFiltered(this.projectsMap);
     }
 
+    /**
+     * Handles selection of competencies
+     * @param event map of competencies
+     */
     onCompetenciesSelected(event: Map<string, [boolean, boolean]>) {
         this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: number) => {
             value.selected = event.has(value.title) && event.get(value.title)[0];
@@ -316,106 +428,68 @@ export class OverviewComponent implements OnInit, OnDestroy {
         this.initializeProjectsFiltered(this.projectsMap);
     }
 
+    /**
+     * Handles selection of a price limit
+     * @param event price limit
+     */
     onPriceLimitSelected(event: number) {
-        this.priceLimit = event;
+        this.costsPerChildLimit = event;
         this.initializeProjectsFiltered(this.projectsMap);
     }
 
+    /**
+     * Handles selection of effort filter
+     * @param event filter value
+     */
     onLessThanOneHourChanged(event: [boolean, boolean]) {
         this.lessThanOneHour = event;
         this.initializeProjectsFiltered(this.projectsMap);
     }
 
+    /**
+     * Handles selection of effort filter
+     * @param event filter value
+     */
     onBetweenOneAndTwoHoursChanged(event: [boolean, boolean]) {
         this.betweenOneAndTwoHours = event;
         this.initializeProjectsFiltered(this.projectsMap);
     }
 
+    /**
+     * Handles selection of effort filter
+     * @param event filter value
+     */
     onBetweenTwoAndFourHoursChanged(event: [boolean, boolean]) {
         this.betweenTwoAndFourHours = event;
         this.initializeProjectsFiltered(this.projectsMap);
     }
 
+    /**
+     * Handles selection of effort filter
+     * @param event filter value
+     */
     onBetweenOneAndTwoDaysChanged(event: [boolean, boolean]) {
         this.betweenOneAndTwoDays = event;
         this.initializeProjectsFiltered(this.projectsMap);
     }
 
+    /**
+     * Handles selection of effort filter
+     * @param event filter value
+     */
     onMoreThanTwoDaysChanged(event: [boolean, boolean]) {
         this.moreThanTwoDays = event;
         this.initializeProjectsFiltered(this.projectsMap);
     }
 
     //
+    // Storage
     //
-    //
 
-    private filterProject(project: Project): boolean {
-        const matchesGoal = this.checkGoalMatch(project);
-        const matchesCompetency = this.checkCompetencyMatch(project);
-        const matchesPriceLimit = project.costPerChild <= this.priceLimit;
-        const matchesDuration = this.checkDurationMatch(project);
-
-        return matchesGoal && matchesCompetency && matchesPriceLimit && matchesDuration;
-    }
-
-    // Checks if the given project contains any of the goals selected in the filter
-    private checkGoalMatch(project: Project): boolean{
-        let matchesGoals = true;
-        if (this.isAnyGoalSelected()){
-            const projectGoals = [];
-            project.sustainableDevelopmentGoalIds.forEach(id => {
-                const goal = this.selectableGoalsMap.get(id);
-                if (goal != null) {
-                    projectGoals.push(goal.title);
-                }
-            });
-
-            matchesGoals = projectGoals.some(projectGoal => {
-                return Array.from(this.selectableGoalsMap.values()).some(selectableGoal => {
-                    return selectableGoal.selected && selectableGoal.title === projectGoal;
-                });
-            });
-        }
-        return matchesGoals;
-    }
-
-    // Checks if the given project contains any of the competencies selected in the filter
-    private checkCompetencyMatch(project: Project): boolean {
-        let matchesCompetencies = true;
-        if (this.isAnyCompetencySelected()){
-            const projectCompetencies = [];
-            project.competencyIds.forEach(id => {
-                const competency = this.selectableCompetenciesMap.get(id);
-                if (competency != null) {
-                    projectCompetencies.push(competency.title);
-                }
-            });
-
-            matchesCompetencies = projectCompetencies.some(projectCompetency => {
-                return Array.from(this.selectableCompetenciesMap.values()).some(selectableCompetency => {
-                    return selectableCompetency.selected && selectableCompetency.title === projectCompetency;
-                });
-            });
-        }
-
-        return matchesCompetencies;
-    }
-
-    // Checks if the given project contains any of the durations selected in the filter
-    private checkDurationMatch(project: Project): boolean {
-        let matchesDuration = true;
-        if (this.isAnyDurationSelected()){
-            matchesDuration = (this.lessThanOneHour[0] && 0 <= project.effortInHours && project.effortInHours < 1)
-                || (this.betweenOneAndTwoHours[0] && 1 <= project.effortInHours && project.effortInHours < 2)
-                || (this.betweenTwoAndFourHours[0] && 2 <= project.effortInHours && project.effortInHours < 4)
-                || (this.betweenOneAndTwoDays[0] && 4 <= project.effortInHours && project.effortInHours < 8)
-                || (this.moreThanTwoDays[0] && 8 <= project.effortInHours);
-        }
-
-        return matchesDuration;
-    }
-
+    /**
+     * Finds entities
+     * @param forceReload force reload
+     */
     private findEntities(forceReload = false) {
         this.projectService.fetchProjects(forceReload);
         this.goalService.fetchGoals(forceReload);
@@ -427,62 +501,31 @@ export class OverviewComponent implements OnInit, OnDestroy {
     // Helpers
     //
 
+    /**
+     * Gets maximum costs per child
+     */
     getCostPerChildMax(): number {
         let costPerChildMax = Number.MIN_VALUE;
         this.projectsMap.forEach((value: Project, key: number) => {
-            if (value.costPerChild > costPerChildMax) {
-                costPerChildMax = value.costPerChild;
+            if (value.costsPerChild > costPerChildMax) {
+                costPerChildMax = value.costsPerChild;
             }
         });
 
         return costPerChildMax;
     }
 
+    /**
+     * Gets minimum costs per child
+     */
     getCostPerChildMin(): number {
         let costPerChildMin = Number.MAX_VALUE;
         this.projectsMap.forEach((value: Project, key: number) => {
-            if (value.costPerChild < costPerChildMin) {
-                costPerChildMin = value.costPerChild;
+            if (value.costsPerChild < costPerChildMin) {
+                costPerChildMin = value.costsPerChild;
             }
         });
 
         return costPerChildMin;
-    }
-
-    private isAnyCompetencySelected() {
-        let anyIsSelected = false;
-        this.selectableCompetenciesMap.forEach((selectableCompetency: SelectableCompetency, key: number) => {
-            if (selectableCompetency.selected === true) {
-                anyIsSelected = true;
-            }
-        });
-        return anyIsSelected;
-    }
-
-
-    private isAnyGoalSelected() {
-        let anyIsSelected = false;
-        this.selectableGoalsMap.forEach((selectableGoal: SelectableGoal, key: number) => {
-            if (selectableGoal.selected === true) {
-                anyIsSelected = true;
-            }
-        });
-        return anyIsSelected;
-    }
-
-    private isAnyDurationSelected() {
-        let isAnySelected = false;
-
-        if (
-            this.lessThanOneHour[0] === true ||
-            this.betweenOneAndTwoHours[0] === true ||
-            this.betweenTwoAndFourHours[0] === true ||
-            this.betweenOneAndTwoDays[0] === true ||
-            this.moreThanTwoDays[0] === true
-        ) {
-            isAnySelected = true;
-        }
-
-        return isAnySelected;
     }
 }

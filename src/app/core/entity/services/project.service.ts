@@ -3,13 +3,13 @@ import {Subject} from 'rxjs';
 import {Project} from '../model/project.model';
 import {PROJECT_DATA} from '../model/project.mock';
 
+/**
+ * Handles projects
+ */
 @Injectable({
     providedIn: 'root'
 })
 export class ProjectService {
-
-    constructor() {
-    }
 
     /** Subject that publishes project */
     projectsSubject = new Subject<Map<number, Project>>();
@@ -17,6 +17,10 @@ export class ProjectService {
     /** Map of projects */
     private projects: Map<number, Project>;
 
+    /**
+     * Fetches projects from storage
+     * @param forceReload force reload
+     */
     public fetchProjects(forceReload = false) {
         if (this.projects != null && !forceReload) {
             this.projectsSubject.next(this.projects);
@@ -25,6 +29,9 @@ export class ProjectService {
         }
     }
 
+    /**
+     * Loads mock projects
+     */
     private findProjects() {
         const projectsMap = new Map<number, Project>();
 

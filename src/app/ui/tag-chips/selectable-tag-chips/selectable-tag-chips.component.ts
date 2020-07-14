@@ -1,10 +1,22 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
+/**
+ * Represents a selectable tag
+ */
 export class SelectableTag {
+    /** Tag name */
     name: string;
+    /** Selected */
     selected: boolean;
+    /** Disabled */
     disabled: boolean;
 
+    /**
+     * Constructor
+     * @param name name
+     * @param selected selected
+     * @param disabled disabled
+     */
     constructor(name: string, selected: boolean, disabled: boolean) {
         this.name = name;
         this.selected = selected;
@@ -40,12 +52,16 @@ export class SelectableTagChipsComponent implements OnChanges {
     /** Event emitter indicating changes in tags */
     @Output() tagsChangedEmitter = new EventEmitter<Map<string, [boolean, boolean]>>();
 
+    /** List of selectable tags */
     selectableTags: SelectableTag[] = [];
 
     //
     // Lifecycle hooks
     //
 
+    /**
+     * Handles on-changes lifecycle phase
+     */
     ngOnChanges(changes: SimpleChanges) {
         this.initializeSelectableTags();
     }
@@ -54,6 +70,9 @@ export class SelectableTagChipsComponent implements OnChanges {
     // Initialization
     //
 
+    /**
+     * Initializes selectable tags
+     */
     private initializeSelectableTags() {
         this.selectableTags = [];
         this.selectableTagsMap.forEach((value: [boolean, boolean], key: string) => {
@@ -65,7 +84,11 @@ export class SelectableTagChipsComponent implements OnChanges {
     // Actions
     //
 
-    onChipClicked(tag: SelectableTag) {
+    /**
+     * Handles click on a tag
+     * @param tag tag being clicked
+     */
+    onTagClicked(tag: SelectableTag) {
         if (!tag.disabled) {
             this.selectableTagsMap.set(tag.name, [!tag.selected, tag.disabled]);
             this.initializeSelectableTags();
@@ -78,14 +101,23 @@ export class SelectableTagChipsComponent implements OnChanges {
     // Helpers
     //
 
+    /**
+     * Gets a chip border
+     */
     getBorder() {
         return `${this.border} 2px solid`;
     }
 
+    /**
+     * Gets a chip background
+     */
     getBackground(tag: SelectableTag) {
         return tag.selected ? this.background : 'transparent';
     }
 
+    /**
+     * Gets a chip disabled state
+     */
     getDisabled(tag: SelectableTag) {
         return tag.disabled;
     }

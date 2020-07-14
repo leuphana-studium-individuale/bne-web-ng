@@ -1,3 +1,4 @@
+/** Mock data for competencies */
 export const PARTNER_DATA = [{
     id: 0,
     name: 'GemüseAckerdemie',

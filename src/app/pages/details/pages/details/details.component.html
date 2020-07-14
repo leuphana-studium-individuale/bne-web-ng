@@ -4,12 +4,12 @@
 </app-details-toolbar>
 
 <div *ngIf="project != null" class="content">
-    <img *ngIf="project.logoName !== ''" mat-card-image class="project-logo"
-         [attr.src]="project.logoName">
+    <img *ngIf="project.bannerUrl !== ''" mat-card-image class="project-logo"
+         [attr.src]="project.bannerUrl">
     <div class="project-basic-information flexcontainer">
         <div class="flexbox">
             <mat-icon class="project-basic-information-logo">euro_symbol</mat-icon>
-            <span class="project-basic-information-text">{{ project.costPerChild }} Euro pro Kind</span>
+            <span class="project-basic-information-text">{{ project.costsPerChild }} Euro pro Kind</span>
         </div>
         <div class="flexbox"></div>
         <div class="flexbox">

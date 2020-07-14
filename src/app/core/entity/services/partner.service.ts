@@ -3,13 +3,13 @@ import {Subject} from 'rxjs';
 import {Partner} from '../model/partner.model';
 import {PARTNER_DATA} from '../model/partner.mock';
 
+/**
+ * Handles partners
+ */
 @Injectable({
     providedIn: 'root'
 })
 export class PartnerService {
-
-    constructor() {
-    }
 
     /** Subject that publishes partners */
     partnersSubject = new Subject<Map<number, Partner>>();
@@ -17,6 +17,10 @@ export class PartnerService {
     /** Map of partners */
     private partners: Map<number, Partner>;
 
+    /**
+     * Fetches partners from storage
+     * @param forceReload force reload
+     */
     public fetchPartners(forceReload = false) {
         if (this.partners != null && !forceReload) {
             this.partnersSubject.next(this.partners);
@@ -25,6 +29,9 @@ export class PartnerService {
         }
     }
 
+    /**
+     * Loads mock partners
+     */
     private findPartners() {
         const partnersMap = new Map<number, Partner>();
 

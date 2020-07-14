@@ -3,13 +3,13 @@ import {Subject} from 'rxjs';
 import {Competency} from '../model/competency.model';
 import {COMPETENCY_DATA} from '../model/competency.mock';
 
+/**
+ * Handles competencies
+ */
 @Injectable({
     providedIn: 'root'
 })
 export class CompetencyService {
-
-    constructor() {
-    }
 
     /** Subject that publishes competencies */
     competenciesSubject = new Subject<Map<number, Competency>>();
@@ -17,15 +17,22 @@ export class CompetencyService {
     /** Map of competencies */
     private competencies: Map<number, Competency>;
 
+    /**
+     * Fetches competencies from storage
+     * @param forceReload force reload
+     */
     public fetchCompetencies(forceReload = false) {
         if (this.competencies != null && !forceReload) {
             this.competenciesSubject.next(this.competencies);
         } else {
-            this.findCompetencies();
+            this.loadMockCompetencies();
         }
     }
 
-    private findCompetencies() {
+    /**
+     * Loads mock competencies
+     */
+    private loadMockCompetencies() {
         const competenciesMap = new Map<number, Competency>();
 
         COMPETENCY_DATA.forEach(c => {

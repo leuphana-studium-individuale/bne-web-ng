@@ -1,6 +1,6 @@
 <mat-card class="project">
-    <img *ngIf="project.logoName !== ''" mat-card-image
-         [attr.src]="project.logoName">
+    <img *ngIf="project.bannerUrl !== ''" mat-card-image
+         [attr.src]="project.bannerUrl">
     <mat-card-title>{{ project.title}}</mat-card-title>
     <mat-card-subtitle>{{ project.description }}</mat-card-subtitle>
     <mat-card-content>

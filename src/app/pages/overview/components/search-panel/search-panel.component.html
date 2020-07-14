@@ -14,10 +14,10 @@
     <div class="flexcontainer">
         <div class="flexbox">
             <h4>Preis pro Kind</h4>
-            <app-search-panel-costs [value]="costPerChildValue"
-                                    [minValue]="costPerChildMin"
-                                    [maxValue]="costPerChildMax"
-                                    [color]="costPerChildColor"
+            <app-search-panel-costs [costPerChildValue]="costPerChildValue"
+                                    [costPerChildMin]="costPerChildMin"
+                                    [costPerChildMax]="costPerChildMax"
+                                    [costPerChildColor]="costPerChildColor"
                                     (valueChangedEmitter)="onPriceSelected($event)">
             </app-search-panel-costs>
         </div>

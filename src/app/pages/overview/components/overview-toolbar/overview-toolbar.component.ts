@@ -1,6 +1,9 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 
+/**
+ * Displays toolbar for overview page
+ */
 @Component({
     selector: 'app-overview-toolbar',
     templateUrl: './overview-toolbar.component.html',
@@ -21,21 +24,27 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
         ])
     ]
 })
-export class OverviewToolbarComponent implements OnInit {
+export class OverviewToolbarComponent {
 
+    /** State of the search panel */
     @Input() searchPanelState = false;
+    /** Event emitter indicating menu item being clicked */
     @Output() menuItemEventEmitter = new EventEmitter<string>();
 
-    constructor() {
-    }
+    //
+    // Actions
+    //
 
-    ngOnInit(): void {
-    }
-
+    /**
+     * Handles click on filter button
+     */
     onFilterClicked() {
         this.menuItemEventEmitter.emit('filter');
     }
 
+    /**
+     * Handles click on reset filter button
+     */
     onResetFilterClicked() {
         this.menuItemEventEmitter.emit('filter-reset');
     }

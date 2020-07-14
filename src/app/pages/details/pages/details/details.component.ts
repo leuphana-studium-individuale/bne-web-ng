@@ -12,6 +12,9 @@ import {Competency} from '../../../../core/entity/model/competency.model';
 import {Partner} from '../../../../core/entity/model/partner.model';
 import {MaterialColorService} from '../../../../core/ui/services/material-color.service';
 
+/**
+ * Displays details page
+ */
 @Component({
     selector: 'app-details',
     templateUrl: './details.component.html',
@@ -22,32 +25,58 @@ export class DetailsComponent implements OnInit, OnDestroy {
     /** ID passed as an argument */
     id: number;
 
+    /** Project to be displayed */
     project: Project;
+    /** Project goals */
     projectGoals = [];
+    /** Project competencies */
     projectCompetencies = [];
+    /** Project partner */
     partner: Partner;
 
+    /** Map of projects */
     projectsMap: Map<number, Project> = new Map<number, Project>();
+    /** Map of goals */
     goalsMap: Map<number, Goal> = new Map<number, Goal>();
+    /** Map of competencies */
     competenciesMap: Map<number, Competency> = new Map<number, Competency>();
+    /** Map of partners */
     partnersMap: Map<number, Partner> = new Map<number, Partner>();
 
-    // Colors
+    /** Background color for goal tags */
     public goalsBackgroundColor = 'transparent';
+    /** Background color for competencies tags */
     public competenciesBackgroundColor = 'transparent';
 
     /** Helper subject used to finish other subscriptions */
     public unsubscribeSubject = new Subject();
 
-    constructor(private projectService: ProjectService,
+    /**
+     * Constructor
+     * @param competencyService competency service
+     * @param goalService goal service
+     * @param materialColorService material color service
+     * @param partnerService partner service
+     * @param projectService project service
+     * @param route route
+     * @param router router
+     */
+    constructor(private competencyService: CompetencyService,
                 private goalService: GoalService,
-                private competencyService: CompetencyService,
-                private partnerService: PartnerService,
                 private materialColorService: MaterialColorService,
-                private router: Router,
-                private route: ActivatedRoute) {
+                private partnerService: PartnerService,
+                private projectService: ProjectService,
+                private route: ActivatedRoute,
+                private router: Router) {
     }
 
+    //
+    // Lifecycle hooks
+    //
+
+    /**
+     * Handles on-init lifecycle phase
+     */
     ngOnInit() {
         this.initializeSubscriptions();
         this.initializeMaterialColors();
@@ -60,55 +89,21 @@ export class DetailsComponent implements OnInit, OnDestroy {
         });
     }
 
+    /**
+     * Handles on-destroy lifecycle phase
+     */
     ngOnDestroy() {
         this.unsubscribeSubject.next();
         this.unsubscribeSubject.complete();
     }
 
     //
-    // Events
-    //
-
-    onProjectsUpdated(projects: Map<number, Project>) {
-        this.projectsMap = projects;
-
-        this.initializeProject(this.projectsMap);
-        this.initializeGoals(this.goalsMap);
-        this.initializeCompetencies(this.competenciesMap);
-        this.initializePartner(this.partnersMap);
-    }
-
-    onGoalsUpdated(goals: Map<number, Goal>) {
-        this.goalsMap = goals;
-
-        this.initializeProject(this.projectsMap);
-        this.initializeGoals(this.goalsMap);
-        this.initializeCompetencies(this.competenciesMap);
-        this.initializePartner(this.partnersMap);
-    }
-
-    onCompetenciesUpdated(competencies: Map<number, Competency>) {
-        this.competenciesMap = competencies;
-
-        this.initializeProject(this.projectsMap);
-        this.initializeGoals(this.goalsMap);
-        this.initializeCompetencies(this.competenciesMap);
-        this.initializePartner(this.partnersMap);
-    }
-
-    onPartnersUpdated(partners: Map<number, Partner>) {
-        this.partnersMap = partners;
-
-        this.initializeProject(this.projectsMap);
-        this.initializeGoals(this.goalsMap);
-        this.initializeCompetencies(this.competenciesMap);
-        this.initializePartner(this.partnersMap);
-    }
-
-    //
     // Initialization
     //
 
+    /**
+     * Initializes subscriptions
+     */
     private initializeSubscriptions() {
         this.projectService.projectsSubject.pipe(
             takeUntil(this.unsubscribeSubject),
@@ -136,6 +131,9 @@ export class DetailsComponent implements OnInit, OnDestroy {
         });
     }
 
+    /**
+     * Initializes project
+     */
     private initializeProject(projectsMap: Map<number, Project>) {
         if (projectsMap.has(this.id)) {
             this.project = projectsMap.get(this.id);
@@ -144,6 +142,9 @@ export class DetailsComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Initializes goals
+     */
     private initializeGoals(goalsMap: Map<number, Goal>) {
         if (this.project != null) {
             this.projectGoals = [];
@@ -156,6 +157,9 @@ export class DetailsComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Initializes competencies
+     */
     private initializeCompetencies(competenciesMap: Map<number, Competency>) {
         if (this.project != null) {
             this.projectCompetencies = [];
@@ -168,30 +172,31 @@ export class DetailsComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Initializes partner
+     */
     private initializePartner(partnersMap: Map<number, Partner>) {
         if (this.project != null && partnersMap.has(this.id)) {
             this.partner = partnersMap.get(this.project.partnerId);
         }
     }
 
+    /**
+     * Initializes material colors
+     */
     private initializeMaterialColors() {
         this.goalsBackgroundColor = this.materialColorService.primary;
         this.competenciesBackgroundColor = this.materialColorService.accent;
     }
 
-
-//
-// this.project.competencyIds.forEach(id => {
-//     const competency = this.competenciesMap.get(id);
-//     if (competency != null) {
-//         this.projectCompetencies.push(competency.title);
-//     }
-// });
-
     //
     // Actions
     //
 
+    /**
+     * Handles click on menu item
+     * @param menuItem menu item
+     */
     onMenuItemClicked(menuItem: string) {
         switch (menuItem) {
             case 'back': {
@@ -204,28 +209,86 @@ export class DetailsComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Handles click on call button
+     * @param phone phone number
+     */
+    onCallButtonClicked(phone: string) {
+        window.location.href = `tel:${phone}`;
+    }
+
+    /**
+     * Handles click on mail button
+     * @param mail mail address
+     */
+    onMailButtonClicked(mail: string) {
+        window.location.href = `mailto:${mail}?subject=${escape('Anfrage BNE')}`;
+    }
+
+    /**
+     * Handles projects being loaded
+     * @param projects projects
+     */
+    onProjectsUpdated(projects: Map<number, Project>) {
+        this.projectsMap = projects;
+
+        this.initializeProject(this.projectsMap);
+        this.initializeGoals(this.goalsMap);
+        this.initializeCompetencies(this.competenciesMap);
+        this.initializePartner(this.partnersMap);
+    }
+
+    /**
+     * Handles goals being loaded
+     * @param goals goals
+     */
+    onGoalsUpdated(goals: Map<number, Goal>) {
+        this.goalsMap = goals;
+
+        this.initializeProject(this.projectsMap);
+        this.initializeGoals(this.goalsMap);
+        this.initializeCompetencies(this.competenciesMap);
+        this.initializePartner(this.partnersMap);
+    }
+
+    /**
+     * Handles competencies being loaded
+     * @param competencies competencies
+     */
+    onCompetenciesUpdated(competencies: Map<number, Competency>) {
+        this.competenciesMap = competencies;
+
+        this.initializeProject(this.projectsMap);
+        this.initializeGoals(this.goalsMap);
+        this.initializeCompetencies(this.competenciesMap);
+        this.initializePartner(this.partnersMap);
+    }
+
+    /**
+     * Handles partners being loaded
+     * @param partners partners
+     */
+    onPartnersUpdated(partners: Map<number, Partner>) {
+        this.partnersMap = partners;
+
+        this.initializeProject(this.projectsMap);
+        this.initializeGoals(this.goalsMap);
+        this.initializeCompetencies(this.competenciesMap);
+        this.initializePartner(this.partnersMap);
+    }
+
     //
-    //
+    // Storage
     //
 
+    /**
+     * Finds entities
+     * @param forceReload force reload
+     */
     private findEntities(forceReload = false) {
         this.projectService.fetchProjects(forceReload);
         this.goalService.fetchGoals(forceReload);
         this.competencyService.fetchCompetencies(forceReload);
         this.partnerService.fetchPartners(forceReload);
-    }
-
-    onCallButtonClicked(phone: string) {
-        const link = `tel:${phone}`;
-
-        window.location.href = link;
-    }
-
-    onMailButtonClicked(mail: string) {
-        const link = `mailto:`
-            + mail
-            + `?subject=${escape('Anfrage BNE')}`;
-
-        window.location.href = link;
     }
 }
