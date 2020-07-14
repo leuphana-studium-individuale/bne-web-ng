@@ -216,7 +216,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
                 });
             });
 
-            value.selected = existsInProjects;
+            value.selected = false;
             value.disabled = !existsInProjects;
         });
         this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: number) => {
@@ -226,7 +226,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
                 });
             });
 
-            value.selected = existsInProjects;
+            value.selected = false;
             value.disabled = !existsInProjects;
         });
 
@@ -259,11 +259,11 @@ export class OverviewComponent implements OnInit, OnDestroy {
             return 8 <= p.effortInHours;
         });
 
-        this.lessThanOneHour = [lessThanOneHourExists, !lessThanOneHourExists];
-        this.betweenOneAndTwoHours = [betweenOneAndTwoHoursExists, !betweenOneAndTwoHoursExists];
-        this.betweenTwoAndFourHours = [betweenTwoAndFourHoursExists, !betweenTwoAndFourHoursExists];
-        this.betweenOneAndTwoDays = [betweenOneAndTwoDaysExists, !betweenOneAndTwoDaysExists];
-        this.moreThanTwoDays = [moreThanTwoDaysExists, !moreThanTwoDaysExists];
+        this.lessThanOneHour = [false, !lessThanOneHourExists];
+        this.betweenOneAndTwoHours = [false, !betweenOneAndTwoHoursExists];
+        this.betweenTwoAndFourHours = [false, !betweenTwoAndFourHoursExists];
+        this.betweenOneAndTwoDays = [false, !betweenOneAndTwoDaysExists];
+        this.moreThanTwoDays = [false, !moreThanTwoDaysExists];
     }
 
     private initializeMaterial() {
@@ -361,45 +361,59 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
     // Checks if the given project contains any of the goals selected in the filter
     private checkGoalMatch(project: Project): boolean{
-        const projectGoals = [];
-        project.sustainableDevelopmentGoalIds.forEach(id => {
-            const goal = this.selectableGoalsMap.get(id);
-            if (goal != null) {
-                projectGoals.push(goal.title);
-            }
-        });
-
-        return projectGoals.some(projectGoal => {
-            return Array.from(this.selectableGoalsMap.values()).some(selectableGoal => {
-                return selectableGoal.selected && selectableGoal.title === projectGoal;
+        let matchesGoals = true;
+        if (this.isAnyGoalSelected()){
+            const projectGoals = [];
+            project.sustainableDevelopmentGoalIds.forEach(id => {
+                const goal = this.selectableGoalsMap.get(id);
+                if (goal != null) {
+                    projectGoals.push(goal.title);
+                }
             });
-        });
+
+            matchesGoals = projectGoals.some(projectGoal => {
+                return Array.from(this.selectableGoalsMap.values()).some(selectableGoal => {
+                    return selectableGoal.selected && selectableGoal.title === projectGoal;
+                });
+            });
+        }
+        return matchesGoals;
     }
 
     // Checks if the given project contains any of the competencies selected in the filter
     private checkCompetencyMatch(project: Project): boolean {
-        const projectCompetencies = [];
-        project.competencyIds.forEach(id => {
-            const competency = this.selectableCompetenciesMap.get(id);
-            if (competency != null) {
-                projectCompetencies.push(competency.title);
-            }
-        });
-
-        return projectCompetencies.some(projectCompetency => {
-            return Array.from(this.selectableCompetenciesMap.values()).some(selectableCompetency => {
-                return selectableCompetency.selected && selectableCompetency.title === projectCompetency;
+        let matchesCompetencies = true;
+        if (this.isAnyCompetencySelected()){
+            const projectCompetencies = [];
+            project.competencyIds.forEach(id => {
+                const competency = this.selectableCompetenciesMap.get(id);
+                if (competency != null) {
+                    projectCompetencies.push(competency.title);
+                }
             });
-        });
+
+            matchesCompetencies = projectCompetencies.some(projectCompetency => {
+                return Array.from(this.selectableCompetenciesMap.values()).some(selectableCompetency => {
+                    return selectableCompetency.selected && selectableCompetency.title === projectCompetency;
+                });
+            });
+        }
+
+        return matchesCompetencies;
     }
 
     // Checks if the given project contains any of the durations selected in the filter
     private checkDurationMatch(project: Project): boolean {
-        return (this.lessThanOneHour[0] && 0 <= project.effortInHours && project.effortInHours < 1)
-            || (this.betweenOneAndTwoHours[0] && 1 <= project.effortInHours && project.effortInHours < 2)
-            || (this.betweenTwoAndFourHours[0] && 2 <= project.effortInHours && project.effortInHours < 4)
-            || (this.betweenOneAndTwoDays[0] && 4 <= project.effortInHours && project.effortInHours < 8)
-            || (this.moreThanTwoDays[0] && 8 <= project.effortInHours);
+        let matchesDuration = true;
+        if (this.isAnyDurationSelected()){
+            matchesDuration = (this.lessThanOneHour[0] && 0 <= project.effortInHours && project.effortInHours < 1)
+                || (this.betweenOneAndTwoHours[0] && 1 <= project.effortInHours && project.effortInHours < 2)
+                || (this.betweenTwoAndFourHours[0] && 2 <= project.effortInHours && project.effortInHours < 4)
+                || (this.betweenOneAndTwoDays[0] && 4 <= project.effortInHours && project.effortInHours < 8)
+                || (this.moreThanTwoDays[0] && 8 <= project.effortInHours);
+        }
+
+        return matchesDuration;
     }
 
     private findEntities(forceReload = false) {
@@ -433,5 +447,42 @@ export class OverviewComponent implements OnInit, OnDestroy {
         });
 
         return costPerChildMin;
+    }
+
+    private isAnyCompetencySelected() {
+        let anyIsSelected = false;
+        this.selectableCompetenciesMap.forEach((selectableCompetency: SelectableCompetency, key: number) => {
+            if (selectableCompetency.selected === true) {
+                anyIsSelected = true;
+            }
+        });
+        return anyIsSelected;
+    }
+
+
+    private isAnyGoalSelected() {
+        let anyIsSelected = false;
+        this.selectableGoalsMap.forEach((selectableGoal: SelectableGoal, key: number) => {
+            if (selectableGoal.selected === true) {
+                anyIsSelected = true;
+            }
+        });
+        return anyIsSelected;
+    }
+
+    private isAnyDurationSelected() {
+        let isAnySelected = false;
+
+        if (
+            this.lessThanOneHour[0] === true ||
+            this.betweenOneAndTwoHours[0] === true ||
+            this.betweenTwoAndFourHours[0] === true ||
+            this.betweenOneAndTwoDays[0] === true ||
+            this.moreThanTwoDays[0] === true
+        ) {
+            isAnySelected = true;
+        }
+
+        return isAnySelected;
     }
 }
