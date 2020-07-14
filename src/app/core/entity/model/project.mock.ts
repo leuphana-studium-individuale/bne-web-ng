@@ -45,8 +45,8 @@ export const PROJECT_DATA = [{
     durationInDays: 100,
     logoName: 'https://www.gemueseackerdemie.de/fileadmin/_processed_/b/8/csm_20190121_GemueseKlasse_Bildungsmaterialien_815ba7dfd0.jpg',
     url: 'https://www.gemueseackerdemie.de/gemueseklasse/',
-    sustainableDevelopmentGoalIds: [],
-    competencyIds: [],
+    sustainableDevelopmentGoalIds: [3, 5],
+    competencyIds: [0, 6],
     partnerId: 0
 }, {
     id: 3,
@@ -71,8 +71,8 @@ export const PROJECT_DATA = [{
     durationInDays: 9,
     logoName: '',
     url: 'https://www.wwf.de/fileadmin/fm-wwf/Publikationen-PDF/Ueberfischung-Lehrerhandreichung-Sek-I.pdf',
-    sustainableDevelopmentGoalIds: [],
-    competencyIds: [],
+    sustainableDevelopmentGoalIds: [2, 3, 9],
+    competencyIds: [1, 3, 6],
     partnerId: 2
 }, {
     id: 5,
@@ -86,8 +86,8 @@ export const PROJECT_DATA = [{
     durationInDays: 1,
     logoName: '',
     url: 'https://www.schubz-online.de/index.php/anmeldung/anmeldung-schulen',
-    sustainableDevelopmentGoalIds: [],
-    competencyIds: [],
+    sustainableDevelopmentGoalIds: [5, 13],
+    competencyIds: [1],
     partnerId: 3
 }, {
     id: 6,
@@ -101,8 +101,8 @@ export const PROJECT_DATA = [{
     durationInDays: 1,
     logoName: '',
     url: '',
-    sustainableDevelopmentGoalIds: [],
-    competencyIds: [],
+    sustainableDevelopmentGoalIds: [6, 12],
+    competencyIds: [3, 7],
     partnerId: 3
 }, {
     id: 7,
@@ -117,7 +117,7 @@ export const PROJECT_DATA = [{
     durationInDays: 1,
     logoName: '',
     url: '',
-    sustainableDevelopmentGoalIds: [],
-    competencyIds: [],
+    sustainableDevelopmentGoalIds: [5, 7, 15],
+    competencyIds: [3, 8],
     partnerId: 3
 }];
