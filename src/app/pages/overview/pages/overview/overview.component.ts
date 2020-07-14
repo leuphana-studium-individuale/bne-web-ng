@@ -351,6 +351,16 @@ export class OverviewComponent implements OnInit, OnDestroy {
     //
 
     private filterProject(project: Project): boolean {
+        const matchesGoal = this.checkGoalMatch(project);
+        const matchesCompetency = this.checkCompetencyMatch(project);
+        const matchesPriceLimit = project.costPerChild <= this.priceLimit;
+        const matchesDuration = this.checkDurationMatch(project);
+
+        return matchesGoal && matchesCompetency && matchesPriceLimit && matchesDuration;
+    }
+
+    // Checks if the given project contains any of the goals selected in the filter
+    private checkGoalMatch(project: Project): boolean{
         const projectGoals = [];
         project.sustainableDevelopmentGoalIds.forEach(id => {
             const goal = this.selectableGoalsMap.get(id);
@@ -359,6 +369,14 @@ export class OverviewComponent implements OnInit, OnDestroy {
             }
         });
 
+        return projectGoals.some(projectGoal => {
+            return Array.from(this.selectableGoalsMap.values()).some(selectableGoal => {
+                return selectableGoal.selected && selectableGoal.title === projectGoal;
+            });
+        });
+    }
+
+    private checkCompetencyMatch(project: Project): boolean {
         const projectCompetencies = [];
         project.competencyIds.forEach(id => {
             const competency = this.selectableCompetenciesMap.get(id);
@@ -367,26 +385,19 @@ export class OverviewComponent implements OnInit, OnDestroy {
             }
         });
 
-        const matchesGoal = projectGoals.some(projectGoal => {
-            return Array.from(this.selectableGoalsMap.values()).some(selectableGoal => {
-                return selectableGoal.selected && selectableGoal.title === projectGoal;
-            });
-        });
-
-        const matchesCompetency = projectCompetencies.some(projectCompetency => {
+        return projectCompetencies.some(projectCompetency => {
             return Array.from(this.selectableCompetenciesMap.values()).some(selectableCompetency => {
                 return selectableCompetency.selected && selectableCompetency.title === projectCompetency;
             });
         });
+    }
 
-        const matchesPriceLimit = project.costPerChild <= this.priceLimit;
-        const matchesDuration = (this.lessThanOneHour[0] && 0 <= project.effortInHours && project.effortInHours < 1)
+    private checkDurationMatch(project: Project): boolean {
+        return (this.lessThanOneHour[0] && 0 <= project.effortInHours && project.effortInHours < 1)
             || (this.betweenOneAndTwoHours[0] && 1 <= project.effortInHours && project.effortInHours < 2)
             || (this.betweenTwoAndFourHours[0] && 2 <= project.effortInHours && project.effortInHours < 4)
             || (this.betweenOneAndTwoDays[0] && 4 <= project.effortInHours && project.effortInHours < 8)
             || (this.moreThanTwoDays[0] && 8 <= project.effortInHours);
-
-        return matchesGoal && matchesCompetency && matchesPriceLimit && matchesDuration;
     }
 
     private findEntities(forceReload = false) {
