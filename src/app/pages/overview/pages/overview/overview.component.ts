@@ -66,7 +66,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     selectableCompetenciesMap = new Map<number, SelectableCompetency>();
     partnersMap = new Map<number, Partner>();
 
-    // Filters
+    // Filters: First boolean refers to selection state, second to activation state
     goalsValuesMap: Map<string, [boolean, boolean]> = new Map<string, [boolean, boolean]>();
     competenciesValuesMap: Map<string, [boolean, boolean]> = new Map<string, [boolean, boolean]>();
     priceLimit = 0;
@@ -376,6 +376,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
         });
     }
 
+    // Checks if the given project contains any of the competencies selected in the filter
     private checkCompetencyMatch(project: Project): boolean {
         const projectCompetencies = [];
         project.competencyIds.forEach(id => {
@@ -392,6 +393,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
         });
     }
 
+    // Checks if the given project contains any of the durations selected in the filter
     private checkDurationMatch(project: Project): boolean {
         return (this.lessThanOneHour[0] && 0 <= project.effortInHours && project.effortInHours < 1)
             || (this.betweenOneAndTwoHours[0] && 1 <= project.effortInHours && project.effortInHours < 2)
