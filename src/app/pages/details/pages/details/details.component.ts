@@ -1,4 +1,4 @@
-import {Component, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subject} from 'rxjs';
 import {ProjectService} from '../../../../core/entity/services/project.service';
@@ -12,6 +12,8 @@ import {Competency} from '../../../../core/entity/model/competency.model';
 import {Partner} from '../../../../core/entity/model/partner.model';
 import {MaterialColorService} from '../../../../core/ui/services/material-color.service';
 import {Swatch, VibrantPalette} from '../../../../core/ui/model/vibrant-palette';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
+import {ContactBottomSheetComponent} from '../../components/contact-bottom-sheet/contact-bottom-sheet.component';
 // @ts-ignore
 import Vibrant = require('node-vibrant');
 
@@ -80,7 +82,8 @@ export class DetailsComponent implements OnInit, OnDestroy {
      * @param route route
      * @param router router
      */
-    constructor(private competencyService: CompetencyService,
+    constructor(private bottomSheet: MatBottomSheet,
+                private competencyService: CompetencyService,
                 private goalService: GoalService,
                 private materialColorService: MaterialColorService,
                 private partnerService: PartnerService,
@@ -235,19 +238,15 @@ export class DetailsComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Handles click on call button
-     * @param phone phone number
+     * Handles click on contact button
      */
-    onCallButtonClicked(phone: string) {
-        window.location.href = `tel:${phone}`;
-    }
-
-    /**
-     * Handles click on mail button
-     * @param mail mail address
-     */
-    onMailButtonClicked(mail: string) {
-        window.location.href = `mailto:${mail}?subject=${escape('Anfrage BNE')}`;
+    onContactClicked() {
+        this.bottomSheet.open(ContactBottomSheetComponent, {
+            data: {
+                phone: this.partner.phone,
+                mail: this.partner.mail,
+            }
+        });
     }
 
     /**

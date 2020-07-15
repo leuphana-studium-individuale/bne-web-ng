@@ -7,14 +7,18 @@
     <img *ngIf="project.bannerUrl !== ''" mat-card-image class="project-logo"
          [attr.src]="project.bannerUrl">
     <div class="project-basic-information flexcontainer">
-        <div class="flexbox">
+        <div >
             <mat-icon class="project-basic-information-logo">euro_symbol</mat-icon>
             <span class="project-basic-information-text">{{ project.costsPerChild }} Euro pro Kind</span>
         </div>
         <div class="flexbox"></div>
-        <div class="flexbox">
+        <div >
             <mat-icon class="project-basic-information-logo">schedule</mat-icon>
             <span class="project-basic-information-text">{{ project.effortInHours }}h Aufwand</span>
+        </div>
+        <div class="flexbox"></div>
+        <div >
+            <button mat-button class="align-top" [style.color]=goalsBackgroundColor (click)="onContactClicked()">PARTNER KONTAKTIEREN</button>
         </div>
     </div>
     <div class="project-tags">
@@ -24,14 +28,5 @@
     </div>
     <div class="project-detailed-information">
         {{ project.description }}
-    </div>
-    <div class="project-action flexcontainer" *ngIf="partner != null">
-        <button mat-button [style.color]=goalsBackgroundColor (click)="onCallButtonClicked(partner.phone)">
-            {{ partner.phone }} anrufen
-        </button>
-        <div class="flexbox"></div>
-        <button mat-button [style.color]=goalsBackgroundColor (click)="onMailButtonClicked(partner.mail)">
-            an {{ partner.mail }} schreiben
-        </button>
     </div>
 </div>
