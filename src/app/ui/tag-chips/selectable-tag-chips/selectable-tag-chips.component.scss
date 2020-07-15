@@ -17,6 +17,10 @@
 // Material
 //
 
+mat-chip-list {
+  pointer-events: none;
+}
+
 mat-chip {
   &:hover .hidden {
     display: inline-block;
