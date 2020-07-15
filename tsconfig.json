@@ -14,6 +14,11 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "allowJs": true,
-    "module": "esnext"
+    "module": "esnext",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "typeRoots": [
+      "./node_modules/@types/"
+    ]
   }
 }

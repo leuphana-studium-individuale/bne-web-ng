@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subject} from 'rxjs';
 import {ProjectService} from '../../../../core/entity/services/project.service';
@@ -11,6 +11,9 @@ import {Goal} from '../../../../core/entity/model/goal.model';
 import {Competency} from '../../../../core/entity/model/competency.model';
 import {Partner} from '../../../../core/entity/model/partner.model';
 import {MaterialColorService} from '../../../../core/ui/services/material-color.service';
+import {Swatch, VibrantPalette} from '../../../../core/ui/model/vibrant-palette';
+// @ts-ignore
+import Vibrant = require('node-vibrant');
 
 /**
  * Displays details page
@@ -50,6 +53,22 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
     /** Helper subject used to finish other subscriptions */
     public unsubscribeSubject = new Subject();
+
+    /**
+     * Converts palette into a vibrant palette object
+     * @param palette palette
+     */
+    static convertToVibrantPalette(palette: any): VibrantPalette {
+        const vibrantPalette = new VibrantPalette();
+        vibrantPalette.vibrant.rgb = palette.Vibrant.rgb;
+        vibrantPalette.darkVibrant.rgb = palette.DarkVibrant.rgb;
+        vibrantPalette.lightVibrant.rgb = palette.LightVibrant.rgb;
+        vibrantPalette.muted.rgb = palette.Muted.rgb;
+        vibrantPalette.darkMuted.rgb = palette.DarkMuted.rgb;
+        vibrantPalette.lightMuted.rgb = palette.LightMuted.rgb;
+
+        return vibrantPalette;
+    }
 
     /**
      * Constructor
@@ -137,6 +156,12 @@ export class DetailsComponent implements OnInit, OnDestroy {
     private initializeProject(projectsMap: Map<number, Project>) {
         if (projectsMap.has(this.id)) {
             this.project = projectsMap.get(this.id);
+            if (this.project.bannerUrl != null && this.project.bannerUrl !== '') {
+                this.getPalette(this.project.bannerUrl).then(palette => {
+                    this.goalsBackgroundColor = this.getColor(palette.lightVibrant as Swatch).toString();
+                    this.competenciesBackgroundColor = this.getColor(palette.lightMuted as Swatch).toString();
+                });
+            }
         } else {
             this.router.navigate(['/']);
         }
@@ -290,5 +315,34 @@ export class DetailsComponent implements OnInit, OnDestroy {
         this.goalService.fetchGoals(forceReload);
         this.competencyService.fetchCompetencies(forceReload);
         this.partnerService.fetchPartners(forceReload);
+    }
+
+    //
+    // Helper
+    //
+
+    /**
+     * Determines palette by a given image URL
+     * @param imageUrl image URL
+     */
+    private getPalette(imageUrl: string): Promise<VibrantPalette> {
+        return new Promise((resolve, reject) => {
+            if (imageUrl != null) {
+                Vibrant.from(imageUrl).getPalette((err, result) => {
+                    resolve(DetailsComponent.convertToVibrantPalette(result));
+                }).then(() => {
+                });
+            } else {
+                reject();
+            }
+        });
+    }
+
+    /**
+     * Converts a swatch into an rgb color string
+     * @param swatch swatch
+     */
+    private getColor(swatch: Swatch) {
+        return `rgb(${swatch.rgb[0]},${swatch.rgb[1]},${swatch.rgb[2]})`;
     }
 }

@@ -47,7 +47,8 @@
     "@angular/router": "~10.0.2",
     "@angular/service-worker": "^10.0.2",
     "karma-junit-reporter": "^2.0.1",
-    "npm": "^6.14.5",
+    "node-vibrant": "^3.2.0-alpha",
+    "npm": "^6.14.6",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.3"

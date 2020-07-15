@@ -26,11 +26,11 @@
         {{ project.description }}
     </div>
     <div class="project-action flexcontainer" *ngIf="partner != null">
-        <button mat-button color="accent" (click)="onCallButtonClicked(partner.phone)">
+        <button mat-button [style.color]=goalsBackgroundColor (click)="onCallButtonClicked(partner.phone)">
             {{ partner.phone }} anrufen
         </button>
         <div class="flexbox"></div>
-        <button mat-button color="accent" (click)="onMailButtonClicked(partner.mail)">
+        <button mat-button [style.color]=goalsBackgroundColor (click)="onMailButtonClicked(partner.mail)">
             an {{ partner.mail }} schreiben
         </button>
     </div>
