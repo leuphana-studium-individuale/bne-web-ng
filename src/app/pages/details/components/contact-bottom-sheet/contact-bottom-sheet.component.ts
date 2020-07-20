@@ -1,6 +1,9 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef} from '@angular/material/bottom-sheet';
 
+/**
+ * Displays bottom sheet with partner contact information
+ */
 @Component({
     selector: 'app-contact-bottom-sheet',
     templateUrl: './contact-bottom-sheet.component.html',
