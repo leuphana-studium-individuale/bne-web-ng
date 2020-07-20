@@ -45,11 +45,6 @@ export class ContactBottomSheetComponent implements OnInit {
         this.mail = this.data.mail;
     }
 
-    openLink(event: MouseEvent): void {
-        this.bottomSheetRef.dismiss();
-        event.preventDefault();
-    }
-
     /**
      * Actions
      */
