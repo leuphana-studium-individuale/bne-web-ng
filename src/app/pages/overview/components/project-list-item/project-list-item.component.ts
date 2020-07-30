@@ -75,12 +75,12 @@ export class ProjectListItemComponent implements OnInit {
             }
         });
 
-        if (this.project.bannerUrl != null && this.project.bannerUrl !== '') {
-            this.getPalette(this.project.bannerUrl).then(palette => {
-                this.goalsBackground = this.getColor(palette.lightVibrant as Swatch).toString();
-                this.competenciesBackground = this.getColor(palette.lightMuted as Swatch).toString();
-            });
-        }
+        // if (this.project.bannerUrl != null && this.project.bannerUrl !== '') {
+        //     this.getPalette(this.project.bannerUrl).then(palette => {
+        //         this.goalsBackground = this.getColor(palette.lightVibrant as Swatch).toString();
+        //         this.competenciesBackground = this.getColor(palette.lightMuted as Swatch).toString();
+        //     });
+        // }
     }
 
     //

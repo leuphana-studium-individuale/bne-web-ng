@@ -159,12 +159,12 @@ export class DetailsComponent implements OnInit, OnDestroy {
     private initializeProject(projectsMap: Map<number, Project>) {
         if (projectsMap.has(this.id)) {
             this.project = projectsMap.get(this.id);
-            if (this.project.bannerUrl != null && this.project.bannerUrl !== '') {
-                this.getPalette(this.project.bannerUrl).then(palette => {
-                    this.goalsBackgroundColor = this.getColor(palette.lightVibrant as Swatch).toString();
-                    this.competenciesBackgroundColor = this.getColor(palette.lightMuted as Swatch).toString();
-                });
-            }
+            // if (this.project.bannerUrl != null && this.project.bannerUrl !== '') {
+            //     this.getPalette(this.project.bannerUrl).then(palette => {
+            //         this.goalsBackgroundColor = this.getColor(palette.lightVibrant as Swatch).toString();
+            //         this.competenciesBackgroundColor = this.getColor(palette.lightMuted as Swatch).toString();
+            //     });
+            // }
         } else {
             this.router.navigate(['/']);
         }
