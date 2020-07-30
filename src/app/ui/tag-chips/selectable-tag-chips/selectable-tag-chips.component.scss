@@ -17,8 +17,8 @@
 // Material
 //
 
-mat-chip-list {
-  pointer-events: none;
+::ng-deep .mat-standard-chip:focus::after {
+  opacity: 0.0 !important;
 }
 
 mat-chip {
