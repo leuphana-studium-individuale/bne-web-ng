@@ -1,9 +1,12 @@
-<app-project-list-item *ngFor="let p of projects"
-                       [project]="p"
-                       [goalsMap]="goalsMap"
-                       [goalsBackground]="goalsBackground"
-                       [competenciesMap]="competenciesMap"
-                       [competenciesBackground]="competenciesBackground"
-                       [partnersMap]="partnersMap"
-(detailsButtonClickedEventEmitter)="onDetailsButtonClicked($event)">
-</app-project-list-item>
+<div class="list">
+    <app-project-list-item *ngFor="let p of projects"
+                           class="list-item"
+                           [project]="p"
+                           [goalsMap]="goalsMap"
+                           [goalsBackground]="goalsBackground"
+                           [competenciesMap]="competenciesMap"
+                           [competenciesBackground]="competenciesBackground"
+                           [partnersMap]="partnersMap"
+                           (detailsButtonClickedEventEmitter)="onDetailsButtonClicked($event)">
+    </app-project-list-item>
+</div>

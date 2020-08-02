@@ -1,0 +1,24 @@
+@import '../../../../../sizes';
+@import '../../../../../styles';
+@import '../../../../../flex';
+
+.list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.list-item {
+  margin: 10px;
+
+  @media #{$breakpoint-large} {
+    flex: 0 1 calc(30% - 10px);
+  }
+  @media #{$breakpoint-medium} {
+    flex: 0 1 calc(45% - 10px);
+  }
+  @media #{$breakpoint-small} {
+    flex: 0 1 calc(100% - 10px);
+  }
+}

@@ -27,6 +27,7 @@ export class ProjectListComponent implements OnChanges {
     @Input() competenciesBackground: 'transparent';
     /** Map of partners */
     @Input() partnersMap: Map<string, Partner>;
+
     /** Event emitter indicating details button being clicked */
     @Output() detailsButtonClickedEventEmitter = new EventEmitter<number>();
 
