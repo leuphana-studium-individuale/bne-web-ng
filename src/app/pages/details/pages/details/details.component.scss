@@ -36,19 +36,8 @@
 }
 
 .project-basic-information, .project-tags, .project-detailed-information, .project-action {
-  @media #{$breakpoint-small} {
-    margin-top: 5px;
-    margin-bottom: 5px;
-  }
-  @media #{$breakpoint-medium} {
-    mmargin-top: 10px;
-    margin-bottom: 10px;
-
-  }
-  @media #{$breakpoint-large} {
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .project-basic-information-logo {
