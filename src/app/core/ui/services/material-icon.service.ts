@@ -60,9 +60,12 @@ export class MaterialIconService {
     /** List of icons */
     private icons: Icon[] = [
         {topic: IconTopic.ACTION, name: 'search', file: 'ic_search_24px.svg'},
-        {topic: IconTopic.CONTENT, name: 'filter_list', file: 'ic_filter_list_24px.svg'}
+        {topic: IconTopic.CONTENT, name: 'filter_list', file: 'ic_filter_list_24px.svg'},
+        {topic: IconTopic.IMAGE, name: 'flash_on', file: 'ic_flash_on_24px.svg'},
+        {topic: IconTopic.IMAGE, name: 'nature', file: 'ic_nature_24px.svg'},
+        {topic: IconTopic.IMAGE, name: 'nature_people', file: 'ic_nature_people_24px.svg'},
+        {topic: IconTopic.MAPS, name: 'local_dining', file: 'ic_local_dining_24px.svg'}
     ];
-
 
     /**
      * Initializes icons
@@ -75,5 +78,20 @@ export class MaterialIconService {
             iconRegistry.addSvgIcon(icon.name,
                 sanitizer.bypassSecurityTrustResourceUrl(this.ICON_ROOT_DIR + '/' + icon.topic + '/svg/' + this.VARIANT + '/' + icon.file));
         });
+
+        iconRegistry.addSvgIcon('gender-male-female', sanitizer.bypassSecurityTrustResourceUrl('assets/material-icons/ic_gender_male_female_24px.svg'));
+        iconRegistry.addSvgIcon('heart-pulse', sanitizer.bypassSecurityTrustResourceUrl('assets/material-icons/ic_heart_pulse_24px.svg'));
+        iconRegistry.addSvgIcon('school', sanitizer.bypassSecurityTrustResourceUrl('assets/material-icons/ic_school_24px.svg'));
+        iconRegistry.addSvgIcon('cup-water', sanitizer.bypassSecurityTrustResourceUrl('assets/material-icons/ic_cup_water_24px.svg'));
+        iconRegistry.addSvgIcon('infinity', sanitizer.bypassSecurityTrustResourceUrl('assets/material-icons/ic_infinity_24px.svg'));
+        iconRegistry.addSvgIcon('weather-sunny', sanitizer.bypassSecurityTrustResourceUrl('assets/material-icons/ic_weather_sunny_24px.svg'));
+        iconRegistry.addSvgIcon('finance', sanitizer.bypassSecurityTrustResourceUrl('assets/material-icons/ic_finance_24px.svg'));
+        iconRegistry.addSvgIcon('factory', sanitizer.bypassSecurityTrustResourceUrl('assets/material-icons/ic_factory_24px.svg'));
+        iconRegistry.addSvgIcon('equal', sanitizer.bypassSecurityTrustResourceUrl('assets/material-icons/ic_equal_24px.svg'));
+        iconRegistry.addSvgIcon('city-variant-outline', sanitizer.bypassSecurityTrustResourceUrl('assets/material-icons/ic_city_variant_outline_24px.svg'));
+        iconRegistry.addSvgIcon('earth', sanitizer.bypassSecurityTrustResourceUrl('assets/material-icons/ic_earth_24px.svg'));
+        iconRegistry.addSvgIcon('waves', sanitizer.bypassSecurityTrustResourceUrl('assets/material-icons/ic_waves_24px.svg'));
+        iconRegistry.addSvgIcon('peace', sanitizer.bypassSecurityTrustResourceUrl('assets/material-icons/ic_peace_24px.svg'));
+        iconRegistry.addSvgIcon('handshake-outline', sanitizer.bypassSecurityTrustResourceUrl('assets/material-icons/ic_handshake_outline_24px.svg'));
     }
 }

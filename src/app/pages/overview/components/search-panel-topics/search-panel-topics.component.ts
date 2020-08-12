@@ -11,13 +11,13 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 export class SearchPanelTopicsComponent {
 
     /** Map of filter values */
-    @Input() valuesMap: Map<string, [boolean, boolean]> = new Map<string, [boolean, boolean]>();
+    @Input() valuesMap: Map<string, [string, boolean, boolean]> = new Map<string, [string, boolean, boolean]>();
     /** Border color for tags */
     @Input() border: string;
     /** Background color for tags */
     @Input() background: string;
     /** Event emitter indicating tags being changed */
-    @Output() tagsChangedEmitter = new EventEmitter<Map<string, [boolean, boolean]>>();
+    @Output() tagsChangedEmitter = new EventEmitter<Map<string, [string, boolean, boolean]>>();
 
     //
     // Actions
@@ -27,7 +27,7 @@ export class SearchPanelTopicsComponent {
      * Handles tag selection
      * @param event event
      */
-    onTagsSelected(event: Map<string, [boolean, boolean]>) {
+    onTagsSelected(event: Map<string, [string, boolean, boolean]>) {
         this.tagsChangedEmitter.emit(event);
     }
 }

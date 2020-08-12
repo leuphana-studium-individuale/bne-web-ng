@@ -31,7 +31,7 @@ export class SelectableGoal extends Goal {
      * @param goal goal
      */
     constructor(goal: Goal) {
-        super(goal.id, goal.title, goal.description);
+        super(goal.id, goal.title, goal.icon, goal.description);
     }
 }
 
@@ -90,9 +90,9 @@ export class OverviewComponent implements OnInit, OnDestroy {
     partnersMap = new Map<number, Partner>();
 
     /** Filter values for goals */
-    goalsValuesMap: Map<string, [boolean, boolean]> = new Map<string, [boolean, boolean]>();
+    goalsValuesMap: Map<string, [string, boolean, boolean]> = new Map<string, [string, boolean, boolean]>();
     /** Filter values for competencies */
-    competenciesValuesMap: Map<string, [boolean, boolean]> = new Map<string, [boolean, boolean]>();
+    competenciesValuesMap: Map<string, [string, boolean, boolean]> = new Map<string, [string, boolean, boolean]>();
     /** Filter value for costs per child */
     costsPerChildLimit = 0;
     /** Filter value for effort */
@@ -278,10 +278,10 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
         // Transform selectable maps to value maps
         this.selectableGoalsMap.forEach((value: SelectableGoal, key: number) => {
-            this.goalsValuesMap.set(value.title, [value.selected, value.disabled]);
+            this.goalsValuesMap.set(value.title, [value.icon, value.selected, value.disabled]);
         });
         this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: number) => {
-            this.competenciesValuesMap.set(value.title, [value.selected, value.disabled]);
+            this.competenciesValuesMap.set(value.title, [null, value.selected, value.disabled]);
         });
 
         // Re-instantiate to trigger change detection
@@ -401,7 +401,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
      * Handles details button being clicked
      * @param event project ID
      */
-    onDetailsButtonClicked(event: number) {
+    onProjectClicked(event: number) {
         this.router.navigate([`/details/${event}`]);
     }
 
@@ -409,9 +409,9 @@ export class OverviewComponent implements OnInit, OnDestroy {
      * Handles selection of goals
      * @param event map of goals
      */
-    onGoalsSelected(event: Map<string, [boolean, boolean]>) {
+    onGoalsSelected(event: Map<string, [string, boolean, boolean]>) {
         this.selectableGoalsMap.forEach((value: SelectableGoal, key: number) => {
-            value.selected = event.has(value.title) && event.get(value.title)[0];
+            value.selected = event.has(value.title) && event.get(value.title)[1];
         });
 
         this.initializeProjectsFiltered(this.projectsMap);
@@ -421,9 +421,9 @@ export class OverviewComponent implements OnInit, OnDestroy {
      * Handles selection of competencies
      * @param event map of competencies
      */
-    onCompetenciesSelected(event: Map<string, [boolean, boolean]>) {
+    onCompetenciesSelected(event: Map<string, [string, boolean, boolean]>) {
         this.selectableCompetenciesMap.forEach((value: SelectableCompetency, key: number) => {
-            value.selected = event.has(value.title) && event.get(value.title)[0];
+            value.selected = event.has(value.title) && event.get(value.title)[1];
         });
         this.initializeProjectsFiltered(this.projectsMap);
     }

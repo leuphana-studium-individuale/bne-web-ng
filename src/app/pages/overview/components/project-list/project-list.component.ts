@@ -29,7 +29,7 @@ export class ProjectListComponent implements OnChanges {
     @Input() partnersMap: Map<string, Partner>;
 
     /** Event emitter indicating details button being clicked */
-    @Output() detailsButtonClickedEventEmitter = new EventEmitter<number>();
+    @Output() projectClickedEventEmitter = new EventEmitter<number>();
 
     /** Projects to be displayed */
     projects = [];
@@ -61,10 +61,10 @@ export class ProjectListComponent implements OnChanges {
     //
 
     /**
-     * Handles click on details button
+     * Handles click on project card
      * @param event project ID
      */
-    onDetailsButtonClicked(event: number) {
-        this.detailsButtonClickedEventEmitter.emit(event);
+    onProjectClicked(event: number) {
+        this.projectClickedEventEmitter.emit(event);
     }
 }

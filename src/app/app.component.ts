@@ -1,6 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {ThemeService} from './core/ui/services/theme.service';
 import {OverlayContainer} from '@angular/cdk/overlay';
+import {MaterialIconService} from './core/ui/services/material-icon.service';
+import {DomSanitizer} from '@angular/platform-browser';
+import {MatIconRegistry} from '@angular/material/icon';
 
 /**
  * App component
@@ -17,10 +20,16 @@ export class AppComponent implements OnInit {
 
     /**
      * Constructor
+     * @param iconRegistry icon registry
+     * @param materialIconService material icon service
      * @param overlayContainer overlay container
+     * @param sanitizer sanitizer
      * @param themeService theme service
      */
-    constructor(private overlayContainer: OverlayContainer,
+    constructor(private iconRegistry: MatIconRegistry,
+                private materialIconService: MaterialIconService,
+                private overlayContainer: OverlayContainer,
+                private sanitizer: DomSanitizer,
                 private themeService: ThemeService) {
     }
 
@@ -34,6 +43,8 @@ export class AppComponent implements OnInit {
     ngOnInit() {
         this.initializeTheme();
         this.initializeThemeSubscription();
+
+        this.materialIconService.initializeIcons(this.iconRegistry, this.sanitizer);
     }
 
     //

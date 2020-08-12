@@ -12,11 +12,11 @@ import {Partner} from '../../../../core/entity/model/partner.model';
 export class SearchPanelComponent {
 
     /** Map of goals */
-    @Input() goalsValuesMap: Map<string, [boolean, boolean]> = new Map<string, [boolean, boolean]>();
+    @Input() goalsValuesMap: Map<string, [string, boolean, boolean]> = new Map<string, [string, boolean, boolean]>();
     /** Background color for goal tags */
     @Input() goalsBackgroundColor: 'transparent';
     /** Map of competencies */
-    @Input() competenciesValuesMap: Map<string, [boolean, boolean]> = new Map<string, [boolean, boolean]>();
+    @Input() competenciesValuesMap: Map<string, [string, boolean, boolean]> = new Map<string, [string, boolean, boolean]>();
     /** Background color for competencies tags */
     @Input() competenciesBackgroundColor: 'transparent';
     /** Map of partners */
@@ -43,9 +43,9 @@ export class SearchPanelComponent {
     @Input() moreThanTwoDays = false;
 
     /** Event emitter indicating filter value being changed */
-    @Output() goalsSelectedEmitter = new EventEmitter<Map<string, [boolean, boolean]>>();
+    @Output() goalsSelectedEmitter = new EventEmitter<Map<string, [string, boolean, boolean]>>();
     /** Event emitter indicating filter value being changed */
-    @Output() competenciesSelectedEmitter = new EventEmitter<Map<string, [boolean, boolean]>>();
+    @Output() competenciesSelectedEmitter = new EventEmitter<Map<string, [string, boolean, boolean]>>();
     /** Event emitter indicating filter value being changed */
     @Output() priceSelectedEmitter = new EventEmitter<number>();
     /** Event emitter indicating filter value being changed */
@@ -63,7 +63,7 @@ export class SearchPanelComponent {
      * Handles selection of goals
      * @param event map of goals
      */
-    onGoalsSelected(event: Map<string, [boolean, boolean]>) {
+    onGoalsSelected(event: Map<string, [string, boolean, boolean]>) {
         this.goalsSelectedEmitter.emit(event);
     }
 
@@ -71,7 +71,7 @@ export class SearchPanelComponent {
      * Handles selection of competencies
      * @param event map of competencies
      */
-    onCompetenciesSelected(event: Map<string, [boolean, boolean]>) {
+    onCompetenciesSelected(event: Map<string, [string, boolean, boolean]>) {
         this.competenciesSelectedEmitter.emit(event);
     }
 

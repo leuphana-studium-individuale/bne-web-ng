@@ -6,6 +6,8 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Outp
 export class SelectableTag {
     /** Tag name */
     name: string;
+    /** Tag icon */
+    icon: string;
     /** Selected */
     selected: boolean;
     /** Disabled */
@@ -14,11 +16,13 @@ export class SelectableTag {
     /**
      * Constructor
      * @param name name
+     * @param icon icon
      * @param selected selected
      * @param disabled disabled
      */
-    constructor(name: string, selected: boolean, disabled: boolean) {
+    constructor(name: string, icon: string, selected: boolean, disabled: boolean) {
         this.name = name;
+        this.icon = icon;
         this.selected = selected;
         this.disabled = disabled;
     }
@@ -36,7 +40,7 @@ export class SelectableTag {
 export class SelectableTagChipsComponent implements OnChanges {
 
     /** Tags to be displayed */
-    @Input() selectableTagsMap: Map<string, [boolean, boolean]> = new Map<string, [boolean, boolean]>();
+    @Input() selectableTagsMap: Map<string, [string, boolean, boolean]> = new Map<string, [string, boolean, boolean]>();
     /** Whether the component is readonly */
     @Input() readonly = false;
     /** Array of options */
@@ -50,7 +54,7 @@ export class SelectableTagChipsComponent implements OnChanges {
     /** Placeholder for new elements */
     @Input() placeholder = 'New tag';
     /** Event emitter indicating changes in tags */
-    @Output() tagsChangedEmitter = new EventEmitter<Map<string, [boolean, boolean]>>();
+    @Output() tagsChangedEmitter = new EventEmitter<Map<string, [string, boolean, boolean]>>();
 
     /** List of selectable tags */
     selectableTags: SelectableTag[] = [];
@@ -75,8 +79,8 @@ export class SelectableTagChipsComponent implements OnChanges {
      */
     private initializeSelectableTags() {
         this.selectableTags = [];
-        this.selectableTagsMap.forEach((value: [boolean, boolean], key: string) => {
-            this.selectableTags.push(new SelectableTag(key, value[0], value[1]));
+        this.selectableTagsMap.forEach((value: [string, boolean, boolean], key: string) => {
+            this.selectableTags.push(new SelectableTag(key, value[0], value[1], value[2]));
         });
     }
 
@@ -90,7 +94,7 @@ export class SelectableTagChipsComponent implements OnChanges {
      */
     onTagClicked(tag: SelectableTag) {
         if (!tag.disabled) {
-            this.selectableTagsMap.set(tag.name, [!tag.selected, tag.disabled]);
+            this.selectableTagsMap.set(tag.name, [tag.icon, !tag.selected, tag.disabled]);
             this.initializeSelectableTags();
 
             this.tagsChangedEmitter.emit(this.selectableTagsMap);

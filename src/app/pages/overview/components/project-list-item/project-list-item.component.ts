@@ -29,11 +29,11 @@ export class ProjectListItemComponent implements OnInit {
     @Input() competenciesBackground = 'transparent';
     /** Map of partners */
     @Input() partnersMap: Map<string, Partner>;
-    /** Event emitter indicating details button being clicked */
-    @Output() detailsButtonClickedEventEmitter = new EventEmitter<number>();
 
     /** List of project goals */
     projectGoals = [];
+    /** List of project icons */
+    projectIcons = [];
     /** List of project competencies */
     projectCompetencies = [];
 
@@ -65,6 +65,7 @@ export class ProjectListItemComponent implements OnInit {
             const goal = this.goalsMap.get(id);
             if (goal != null) {
                 this.projectGoals.push(goal.title);
+                this.projectIcons.push(goal.icon);
             }
         });
 
@@ -81,17 +82,6 @@ export class ProjectListItemComponent implements OnInit {
         //         this.competenciesBackground = this.getColor(palette.lightMuted as Swatch).toString();
         //     });
         // }
-    }
-
-    //
-    // Actions
-    //
-
-    /**
-     * Handles click on details button
-     */
-    onDetailsButtonClicked() {
-        this.detailsButtonClickedEventEmitter.emit(this.project.id);
     }
 
     //
