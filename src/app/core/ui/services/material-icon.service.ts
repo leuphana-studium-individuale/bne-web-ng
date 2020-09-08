@@ -54,17 +54,17 @@ class Icon {
 export class MaterialIconService {
 
     /** Root directory of material design icons */
-    private ICON_ROOT_DIR = './assets/material-design-icons';
+    private ICON_ROOT_DIR = 'assets/material-design-icons';
     /** Icon variant */
     private VARIANT = 'production';
     /** List of icons */
     private icons: Icon[] = [
-        {topic: IconTopic.ACTION, name: 'search', file: 'ic_search_24px.svg'},
-        {topic: IconTopic.CONTENT, name: 'filter_list', file: 'ic_filter_list_24px.svg'},
-        {topic: IconTopic.IMAGE, name: 'flash_on', file: 'ic_flash_on_24px.svg'},
-        {topic: IconTopic.IMAGE, name: 'nature', file: 'ic_nature_24px.svg'},
-        {topic: IconTopic.IMAGE, name: 'nature_people', file: 'ic_nature_people_24px.svg'},
-        {topic: IconTopic.MAPS, name: 'local_dining', file: 'ic_local_dining_24px.svg'}
+        // {topic: IconTopic.ACTION, name: 'search', file: 'ic_search_24px.svg'},
+        // {topic: IconTopic.CONTENT, name: 'filter_list', file: 'ic_filter_list_24px.svg'},
+        // {topic: IconTopic.IMAGE, name: 'flash_on', file: 'ic_flash_on_24px.svg'},
+        // {topic: IconTopic.IMAGE, name: 'nature', file: 'ic_nature_24px.svg'},
+        // {topic: IconTopic.IMAGE, name: 'nature_people', file: 'ic_nature_people_24px.svg'},
+        // {topic: IconTopic.MAPS, name: 'local_dining', file: 'ic_local_dining_24px.svg'}
     ];
 
     /**
@@ -78,6 +78,12 @@ export class MaterialIconService {
             iconRegistry.addSvgIcon(icon.name,
                 sanitizer.bypassSecurityTrustResourceUrl(this.ICON_ROOT_DIR + '/' + icon.topic + '/svg/' + this.VARIANT + '/' + icon.file));
         });
+        iconRegistry.addSvgIcon('search', sanitizer.bypassSecurityTrustResourceUrl('assets/material-icons/ic_search_24px.svg'));
+        iconRegistry.addSvgIcon('filter_list', sanitizer.bypassSecurityTrustResourceUrl('assets/material-icons/ic_filter_list_24px.svg'));
+        iconRegistry.addSvgIcon('flash_on', sanitizer.bypassSecurityTrustResourceUrl('assets/material-icons/ic_flash_on_24px.svg'));
+        iconRegistry.addSvgIcon('nature', sanitizer.bypassSecurityTrustResourceUrl('assets/material-icons/ic_nature_24px.svg'));
+        iconRegistry.addSvgIcon('nature_people', sanitizer.bypassSecurityTrustResourceUrl('assets/material-icons/ic_nature_people_24px.svg'));
+        iconRegistry.addSvgIcon('local_dining', sanitizer.bypassSecurityTrustResourceUrl('assets/material-icons/ic_local_dining_24px.svg'));
 
         iconRegistry.addSvgIcon('gender-male-female', sanitizer.bypassSecurityTrustResourceUrl('assets/material-icons/ic_gender_male_female_24px.svg'));
         iconRegistry.addSvgIcon('heart-pulse', sanitizer.bypassSecurityTrustResourceUrl('assets/material-icons/ic_heart_pulse_24px.svg'));
