@@ -254,6 +254,9 @@ export class OverviewComponent implements OnInit, OnDestroy {
         this.projectsMapFiltered = new Map(projectsMapFiltered);
     }
 
+    /**
+     * Initializes filter
+     */
     private initializeFilters() {
         this.selectableGoalsMap.forEach((value: SelectableGoal, key: number) => {
             const existsInProjects = Array.from(this.projectsMap.values()).some(p => {

@@ -1,13 +1,13 @@
-import { TagChipsModule } from './tag-chips.module';
+import {TagChipsModule} from './tag-chips.module';
 
 describe('TagChipsModule', () => {
-  let tagChipsModule: TagChipsModule;
+    let tagChipsModule: TagChipsModule;
 
-  beforeEach(() => {
-    tagChipsModule = new TagChipsModule();
-  });
+    beforeEach(() => {
+        tagChipsModule = new TagChipsModule();
+    });
 
-  it('should create an instance', () => {
-    expect(tagChipsModule).toBeTruthy();
-  });
+    it('should create an instance', () => {
+        expect(tagChipsModule).toBeTruthy();
+    });
 });

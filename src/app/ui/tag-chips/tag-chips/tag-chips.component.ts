@@ -27,6 +27,10 @@ export class TagChipsComponent implements OnChanges {
     @Input() background = 'white';
     /** Placeholder for new elements */
     @Input() placeholder = 'New tag';
+
+    /** Collapsed text */
+    @Input() collapsedText = false;
+
     /** Event emitter indicating changes in tags */
     @Output() tagsChangedEmitter = new EventEmitter<string[]>();
 
@@ -81,7 +85,6 @@ export class TagChipsComponent implements OnChanges {
         this.value = value;
         this.optionsFiltered = this.filterAutoCompleteOptions(this.value);
     }
-
 
     /**
      * Handles deletion of a tag

@@ -6,7 +6,7 @@ export class Goal {
     id: number;
     /** Goal title */
     title: string;
-    /* Goal icon */
+    /** Goal icon */
     icon: string;
     /** Goal description */
     description: string;
