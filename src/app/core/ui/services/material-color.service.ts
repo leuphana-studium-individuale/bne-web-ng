@@ -15,13 +15,13 @@ export class MaterialColorService {
   /** Dark primary text color */
   static DARK_PRIMARY_TEXT = 'rgba(black, 0.87)';
   /** Primary palette */
-  static PRIMARY_PALETTE = PaletteType.LIME;
+  static PRIMARY_PALETTE = PaletteType.LIGHT_GREEN;
   /** Primary hue */
-  static PRIMARY_HUE = HueType._600;
+  static PRIMARY_HUE = HueType._500;
   /** Accent palette */
-  static ACCENT_PALETTE = PaletteType.AMBER;
+  static ACCENT_PALETTE = PaletteType.LIME;
   /** Accent hue */
-  static ACCENT_HUE = HueType._600;
+  static ACCENT_HUE = HueType._400;
 
   /** Primary */
   primary: any;
