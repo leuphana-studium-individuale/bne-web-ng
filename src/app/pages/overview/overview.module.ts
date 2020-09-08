@@ -17,6 +17,8 @@ import {SearchPanelCostsComponent} from './components/search-panel-costs/search-
 import {MatSliderModule} from '@angular/material/slider';
 import {SearchPanelTimesComponent} from './components/search-panel-times/search-panel-times.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatDialogModule} from '@angular/material/dialog';
+import {InformationDialogModule} from '../../ui/information-dialog/information-dialog.module';
 
 
 @NgModule({
@@ -43,7 +45,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
         MatSliderModule,
         MatToolbarModule,
         MatTooltipModule,
-        TagChipsModule
+        TagChipsModule,
+        InformationDialogModule
     ]
 })
 export class OverviewModule {

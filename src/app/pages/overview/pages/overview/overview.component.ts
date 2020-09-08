@@ -16,6 +16,8 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {Router} from '@angular/router';
 import {FilterService} from '../../../../core/entity/services/filter.service';
+import {InformationDialogComponent} from '../../../../ui/information-dialog/information-dialog/information-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
 
 /**
  * Extends goal by attributes to make it selectable
@@ -122,6 +124,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     /**
      * Constructor
      * @param competencyService competency service
+     * @param dialog dialog
      * @param filterService filter service
      * @param goalService goal service
      * @param iconRegistry icon registry
@@ -133,6 +136,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
      * @param sanitizer sanitizer
      */
     constructor(private competencyService: CompetencyService,
+                private dialog: MatDialog,
                 private filterService: FilterService,
                 private goalService: GoalService,
                 private iconRegistry: MatIconRegistry,
@@ -385,6 +389,25 @@ export class OverviewComponent implements OnInit, OnDestroy {
      */
     onMenuItemClicked(menuItem: string) {
         switch (menuItem) {
+            case 'what-are-sdgs': {
+                this.dialog.open(InformationDialogComponent, {
+                    disableClose: false,
+                    data: {
+                        title: 'Was sind Sustainable Development Goals?',
+                        text: `
+                        Die 17 Ziele für nachhaltige Entwicklung (englisch Sustainable Development Goals, SDGs; französisch Objectifs de
+                        développement durable) sind politische Zielsetzungen der Vereinten Nationen (UN), welche weltweit der Sicherung
+                        einer nachhaltigen Entwicklung auf ökonomischer, sozialer sowie ökologischer Ebene dienen sollen. Sie wurden in
+                        Anlehnung an den Entwicklungsprozess der Millenniums-Entwicklungsziele (MDGs) entworfen und traten am 1. Januar
+                        2016 mit einer Laufzeit von 15 Jahren (bis 2030) in Kraft. Im Unterschied zu den MDGs, die insbesondere
+                        Entwicklungsländern galten, gelten die SDGs für alle Staaten.
+                        `,
+                        action: 'Verstanden',
+                        value: null
+                    }
+                });
+                break;
+            }
             case 'filter': {
                 this.searchPanelState = this.searchPanelState === 'opened' ? 'closed' : 'opened';
                 break;

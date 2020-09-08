@@ -43,6 +43,13 @@ export class OverviewToolbarComponent {
     }
 
     /**
+     * Handles click on sustainable development goals button
+     */
+    onSustainableDevelopmentGoalsClicked() {
+        this.menuItemEventEmitter.emit('what-are-sdgs');
+    }
+
+    /**
      * Handles click on reset filter button
      */
     onResetFilterClicked() {
